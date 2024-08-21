@@ -3,7 +3,7 @@
 Assume there are a finite number of time steps indexed by $t=0,1, \ldots, T$. Assume the market-maker always shows a bid price and ask price (at each time $t$ ) along with the associated bid shares and ask shares on the OB. Also assume, for ease of exposition, that the market-maker can add or remove bid/ask shares from the OB costlessly. We use the following notation:
 - Denote $W_t \in \mathbb{R}$ as the market-maker's trading account value at time $t$.
 - Denote $I_t \in \mathbb{Z}$ as the market-maker's inventory of shares at time $t$ (assume $I_0=$ 0 ). Note that the inventory can be positive or negative (negative means the marketmaker is short a certain number of shares).
-- Denote $S_t \in \mathbb{R}^{+}$as the OB Mid Price at time $t$ (assume a stochastic process for $S_t$ ).
+- Denote $S_t \in \mathbb{R}^ {+} $as the OB Mid Price at time $t$ (assume a stochastic process for $S_t$ )
 - Denote $P_t^{(b)} \in \mathbb{R}^{+}$as the market-maker's Bid Price at time $t$.
 - Denote $N_t^{(b)} \in \mathbb{Z}^{+}$as the market-maker's Bid Shares at time $t$.
 - Denote $P_t^{(a)} \in \mathbb{R}^{+}$as the market-maker's Ask Price at time $t$.
