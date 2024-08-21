@@ -101,7 +101,9 @@ The following solution is as presented in the Avellaneda-Stoikov paper. We can e
 
 We denote the Optimal Value function as $V^*\left(t, S_t, W_t, I_t\right)$. Note that unlike Section 5.13 in Chapter 5 where we denoted the Optimal Value Function as a time-indexed sequence $V_t^*(\cdot)$, here we make $t$ an explicit functional argument of $V^*$ and each of $S_t, W_t, I_t$ also as separate functional arguments of $V^*$ (instead of the typical approach of making the state, as a tuple, a single functional argument). This is because in the continuous-time setting, we are interested in the time-differential of the Optimal Value Function and we also want to represent the dependency of the Optimal Value Function on each of $S_t, W_t, I_t$ as explicit separate dependencies. Appendix D provides the derivation of the general HJB formulation (Equation (D.1) in Appendix D)—this general HJB Equation specializes here to the following:
 
-$$\max _{\delta_t^{(b)}, \delta_t^{(a)}} \mathbb{E}\left[d V^*\left(t, S_t, W_t, I_t\right)\right]=0 \text { for } t<T$$
+$$ 
+\max _{\delta_t^{(b)}, \delta_t^{(a)}} \mathbb{E}\left[d V^*\left(t, S_t, W_t, I_t\right)\right]=0 \text { for } t<T
+$$
 
 $$V^*\left(T, S_T, W_T, I_T\right)=-e^{-\gamma \cdot\left(W_T+I_T \cdot S_T\right)}$$
 
@@ -112,7 +114,9 @@ An infinitesimal change $d V^*$ to $V^*\left(t, S_t, W_t, I_t\right)$ is compris
 - Due to randomness in hitting/lifting the market-maker's Bid/Ask (dependence of $V^*$ on $\lambda_t^{(b)}$ and $\lambda_t^{(a)}$ ). Note that the probability of being hit in interval from $t$ to $t+$ $d t$ is $\lambda_t^{(b)} \cdot d t$ and probability of being lifted in interval from $t$ to $t+d t$ is $\lambda_t^{(a)} \cdot d t$, upon which the trading account value $W_t$ changes appropriately and the inventory $I_t$ increments/decrements by 1.
 With this, we can expand $d V^*\left(t, S_t, W_t, I_t\right)$ and rewrite HJB as:
 
-$$\max _{\delta_t^{(b)}, \delta_t^{(a)}}\{ \frac{\partial V^*}{\partial t} \cdot d t+\mathbb{E}\left[\sigma \cdot \frac{\partial V^*}{\partial S_t} \cdot d z_t+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2} \cdot\left(d z_t\right)^2\right]$$
+$$
+\max _{\delta_t^{(b)}, \delta_t^{(a)}}\{ \frac{\partial V^*}{\partial t} \cdot d t+\mathbb{E}\left[\sigma \cdot \frac{\partial V^*}{\partial S_t} \cdot d z_t+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2} \cdot\left(d z_t\right)^2\right]
+$$
 
 $$+\lambda_t^{(b)} \cdot d t \cdot V^*\left(t, S_t, W_t-S_t+\delta_t^{(b)}, I_t+1\right)$$
 
