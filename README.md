@@ -65,9 +65,9 @@ $$
 A landmark paper by Avellaneda and Stoikov (Avellaneda and Stoikov 2008) formulated this optimal market-making problem in its continuous-time version. Their formulation is conducive to analytical tractability and they came up with a simple, clean and intuitive solution. In this subsection, we go over their formulation and in the next subsection, we show the derivation of their solution. We adapt our discrete-time notation above to their continuous-time setting.
 $\left[\left(X_t^{(b)} \mid 0 \leq t<T\right]\right.$ and $\left[X_t^{(a)} \mid 0 \leq t<T\right]$ are assumed to be continuous-time Poisson processes with the hit rate per unit of time and the lift rate per unit of time denoted as $\lambda_t^{(b)}$ and $\lambda_t^{(a)}$, respectively. Hence, we can write the following:
 
-$$d X_t^{(b)} \sim \operatorname{Poisson}\left(\lambda_t^{(b)} \cdot d t\right) $$
+$$d X_t^{(b)} \sim {Poisson}\left(\lambda_t^{(b)} \cdot d t\right) $$
 
-$$ d X_t^{(a)} \sim \operatorname{Poisson}\left(\lambda_t^{(a)} \cdot d t\right) $$
+$$ d X_t^{(a)} \sim {Poisson}\left(\lambda_t^{(a)} \cdot d t\right) $$
 
 $$ \lambda_t^{(b)}=f^{(b)}\left(\delta_t^{(b)}\right) $$
 
