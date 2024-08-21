@@ -100,13 +100,11 @@ The Utility function is assumed to be: $U(x)=-e^{-\gamma x}$ where $\gamma>0$ is
 The following solution is as presented in the Avellaneda-Stoikov paper. We can express the Avellaneda-Stoikov continuous-time formulation as a Hamilton-Jacobi-Bellman (HJB) formulation (note: for reference, the general HJB formulation is covered in Appendix D).
 
 We denote the Optimal Value function as $V^*\left(t, S_t, W_t, I_t\right)$. Note that unlike Section 5.13 in Chapter 5 where we denoted the Optimal Value Function as a time-indexed sequence $V_t^*(\cdot)$, here we make $t$ an explicit functional argument of $V^*$ and each of $S_t, W_t, I_t$ also as separate functional arguments of $V^*$ (instead of the typical approach of making the state, as a tuple, a single functional argument). This is because in the continuous-time setting, we are interested in the time-differential of the Optimal Value Function and we also want to represent the dependency of the Optimal Value Function on each of $S_t, W_t, I_t$ as explicit separate dependencies. Appendix D provides the derivation of the general HJB formulation (Equation (D.1) in Appendix D)—this general HJB Equation specializes here to the following:
-$$
 
-\begin{gathered}
-\max _{\delta_t^{(b)}, \delta_t^{(a)}} \mathbb{E}\left[d V^*\left(t, S_t, W_t, I_t\right)\right]=0 \text { for } t<T \\
-V^*\left(T, S_T, W_T, I_T\right)=-e^{-\gamma \cdot\left(W_T+I_T \cdot S_T\right)}
-\end{gathered}
-$$
+$$\max _{\delta_t^{(b)}, \delta_t^{(a)}} \mathbb{E}\left[d V^*\left(t, S_t, W_t, I_t\right)\right]=0 \text { for } t<T$$
+
+$$V^*\left(T, S_T, W_T, I_T\right)=-e^{-\gamma \cdot\left(W_T+I_T \cdot S_T\right)}$$
+
 
 An infinitesimal change $d V^*$ to $V^*\left(t, S_t, W_t, I_t\right)$ is comprised of 3 components:
 - Due to pure movement in time (dependence of $V^*$ on $t$ ).
@@ -114,15 +112,16 @@ An infinitesimal change $d V^*$ to $V^*\left(t, S_t, W_t, I_t\right)$ is compris
 - Due to randomness in hitting/lifting the market-maker's Bid/Ask (dependence of $V^*$ on $\lambda_t^{(b)}$ and $\lambda_t^{(a)}$ ). Note that the probability of being hit in interval from $t$ to $t+$ $d t$ is $\lambda_t^{(b)} \cdot d t$ and probability of being lifted in interval from $t$ to $t+d t$ is $\lambda_t^{(a)} \cdot d t$, upon which the trading account value $W_t$ changes appropriately and the inventory $I_t$ increments/decrements by 1.
 With this, we can expand $d V^*\left(t, S_t, W_t, I_t\right)$ and rewrite HJB as:
 
-$$
-\begin{aligned}
-\max _{\delta_t^{(b)}, \delta_t^{(a)}}\{ & \frac{\partial V^*}{\partial t} \cdot d t+\mathbb{E}\left[\sigma \cdot \frac{\partial V^*}{\partial S_t} \cdot d z_t+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2} \cdot\left(d z_t\right)^2\right] \\
-& +\lambda_t^{(b)} \cdot d t \cdot V^*\left(t, S_t, W_t-S_t+\delta_t^{(b)}, I_t+1\right) \\
-& +\lambda_t^{(a)} \cdot d t \cdot V^*\left(t, S_t, W_t+S_t+\delta_t^{(a)}, I_t-1\right) \\
-& +\left(1-\lambda_t^{(b)} \cdot d t-\lambda_t^{(a)} \cdot d t\right) \cdot V^*\left(t, S_t, W_t, I_t\right) \\
-& \left.-V^*\left(t, S_t, W_t, I_t\right)\right\}=0
-\end{aligned}
-$$
+$$\max _{\delta_t^{(b)}, \delta_t^{(a)}}\{ \frac{\partial V^*}{\partial t} \cdot d t+\mathbb{E}\left[\sigma \cdot \frac{\partial V^*}{\partial S_t} \cdot d z_t+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2} \cdot\left(d z_t\right)^2\right]$$
+
+$$+\lambda_t^{(b)} \cdot d t \cdot V^*\left(t, S_t, W_t-S_t+\delta_t^{(b)}, I_t+1\right)$$
+
+$$+\lambda_t^{(a)} \cdot d t \cdot V^*\left(t, S_t, W_t+S_t+\delta_t^{(a)}, I_t-1\right)$$
+
+$$+\left(1-\lambda_t^{(b)} \cdot d t-\lambda_t^{(a)} \cdot d t\right) \cdot V^*\left(t, S_t, W_t, I_t\right)$$
+
+$$\left.-V^*\left(t, S_t, W_t, I_t\right)\right\}=0$$
+
 
 
 Next, we want to convert the HJB Equation to a Partial Differential Equation (PDE). We can simplify the above HJB equation with a few observations:
@@ -131,23 +130,20 @@ Next, we want to convert the HJB Equation to a Partial Differential Equation (PD
 - Organize the terms involving $\lambda_t^{(b)}$ and $\lambda_t^{(a)}$ better with some algebra.
 - Divide throughout by $d t$.
 
-$$
-\begin{aligned}
-\max _{\delta_t^{(b)}, \delta_t^{(a)}}\{ & \frac{\partial V^*}{\partial t}+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2} \\
-& +\lambda_t^{(b)} \cdot\left(V^*\left(t, S_t, W_t-S_t+\delta_t^{(b)}, I_t+1\right)-V^*\left(t, S_t, W_t, I_t\right)\right) \\
-& \left.+\lambda_t^{(a)} \cdot\left(V^*\left(t, S_t, W_t+S_t+\delta_t^{(a)}, I_t-1\right)-V^*\left(t, S_t, W_t, I_t\right)\right)\right\}=0
-\end{aligned}
-$$
+$$\max _{\delta_t^{(b)}, \delta_t^{(a)}}\{ \frac{\partial V^*}{\partial t}+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2}$$
+
+$$+\lambda_t^{(b)} \cdot\left(V^*\left(t, S_t, W_t-S_t+\delta_t^{(b)}, I_t+1\right)-V^*\left(t, S_t, W_t, I_t\right)\right)$$
+
+$$\left.+\lambda_t^{(a)} \cdot\left(V^*\left(t, S_t, W_t+S_t+\delta_t^{(a)}, I_t-1\right)-V^*\left(t, S_t, W_t, I_t\right)\right)\right\}=0$$
 
 Next, note that $\lambda_t^{(b)}=f^{(b)}\left(\delta_t^{(b)}\right)$ and $\lambda_t^{(a)}=f^{(a)}\left(\delta_t^{(a)}\right)$, and apply the max only on the relevant terms:
 
-$$
-\begin{aligned}
-& \frac{\partial V^*}{\partial t}+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2} \\
-& +\max _{\delta_t^{(b)}}\left\{f^{(b)}\left(\delta_t^{(b)}\right) \cdot\left(V^*\left(t, S_t, W_t-S_t+\delta_t^{(b)}, I_t+1\right)-V^*\left(t, S_t, W_t, I_t\right)\right)\right\} \\
-& +\max _{\delta_t^{(a)}}\left\{f^{(a)}\left(\delta_t^{(a)}\right) \cdot\left(V^*\left(t, S_t, W_t+S_t+\delta_t^{(a)}, I_t-1\right)-V^*\left(t, S_t, W_t, I_t\right)\right)\right\}=0
-\end{aligned}
-$$
+$$\frac{\partial V^*}{\partial t}+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2}$$
+
+$$+\max _{\delta_t^{(b)}}\left\{f^{(b)}\left(\delta_t^{(b)}\right) \cdot\left(V^*\left(t, S_t, W_t-S_t+\delta_t^{(b)}, I_t+1\right)-V^*\left(t, S_t, W_t, I_t\right)\right)\right\}$$
+
+$$+\max _{\delta_t^{(a)}}\left\{f^{(a)}\left(\delta_t^{(a)}\right) \cdot\left(V^*\left(t, S_t, W_t+S_t+\delta_t^{(a)}, I_t-1\right)-V^*\\left(t, S_t, W_t, I_t\right)\right)\}=0$$
+
 
 This combines with the boundary condition:
 
@@ -163,13 +159,12 @@ $$
 
 to reduce the problem to a Partial Differential Equation (PDE) in terms of $\theta\left(t, S_t, I_t\right)$. Substituting this guessed functional form into the above PDE for $V^*\left(t, S_t, W_t, I_t\right)$ gives:
 
-$$
-\begin{aligned}
-& \frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right) \\
-& +\max _{\delta_t^{(b)}}\left\{\frac{f^{(b)}\left(\delta_t^{(b)}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(b)}-S_t+\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)\right\} \\
-& +\max _{\delta_t^{(a)}}\left\{\frac{f^{(a)}\left(\delta_t^{(a)}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(a)}+S_t+\theta\left(t, S_t, I_t-1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)\right\}=0
-\end{aligned}
-$$
+$$\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)$$
+
+$$+\max _{\delta_t^{(b)}}\left\{\frac{f^{(b)}\left(\delta_t^{(b)}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(b)}-S_t+\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)\right\}$$
+
+$$+\max _{\delta_t^{(a)}}\left\{\frac{f^{(a)}\left(\delta_t^{(a)}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(a)}+S_t+\theta\left(t, S_t, I_t-1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)\right\}=0$$
+
 
 The boundary condition is:
 
@@ -197,12 +192,10 @@ $Q^{(a)}\left(t, S_t, I_t\right)$ is the price to sell a single share with a gua
 
 For convenience, we abbreviate $Q^{(b)}\left(t, S_t, I_t\right)$ as $Q_t^{(b)}$ and $Q^{(a)}\left(t, S_t, I_t\right)$ as $Q_t^{(a)}$. Next, we express $V^*\left(t, S_t, W_t-Q_t^{(b)}, I_t+1\right)=V^*\left(t, S_t, W_t, I_t\right)$ in terms of $\theta$ :
 
-$$
-\begin{gathered}
--e^{-\gamma \cdot\left(W_t-Q_t^{(b)}+\theta\left(t, S_t, I_t+1\right)\right)}=-e^{-\gamma \cdot\left(W_t+\theta\left(t, S_t, I_t\right)\right)} \\
-\Rightarrow Q_t^{(b)}=\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t\right)
-\end{gathered}
-$$
+$$-e^{-\gamma \cdot\left(W_t-Q_t^{(b)}+\theta\left(t, S_t, I_t+1\right)\right)}=-e^{-\gamma \cdot\left(W_t+\theta\left(t, S_t, I_t\right)\right)}$$
+
+$$\Rightarrow Q_t^{(b)}=\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t\right)$$
+
 
 Likewise for $Q_t^{(a)}$, we get:
 $$
@@ -211,41 +204,32 @@ $$
 
 Using Equations (10.14) and (10.15), bring $Q_t^{(b)}$ and $Q_t^{(a)}$ in the PDE for $\theta$ :
 
-$$
-\begin{gathered}
-\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)+\max _{\delta_t^{(b)}} g\left(\delta_t^{(b)}\right)+\max _{\delta_t^{(a)}} h\left(\delta_t^{(b)}\right)=0 \\
-\text { where } g\left(\delta_t^{(b)}\right)=\frac{f^{(b)}\left(\delta_t^{(b)}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(b)}-S_t+Q_t^{(b)}\right)}\right) \\
-\text { and } h\left(\delta_t^{(a)}\right)=\frac{f^{(a)}\left(\delta_t^{(a)}\right)}{\gamma} \cdot\left(1-e^{\left.-\gamma \cdot \delta_t^{(a)}+S_t-Q_t^{(a)}\right)}\right)
-\end{gathered}
-$$
+$$\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)+\max _{\delta_t^{(b)}} g\left(\delta_t^{(b)}\right)+\max _{\delta_t^{(a)}} h\left(\delta_t^{(b)}\right)=0$$
+
+$$\text {where } g\left(\delta_t^{(b)}\right)=\frac{f^{(b)}\left(\delta_t^{(b)}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(b)}-S_t+Q_t^{(b)}\right)}\right)$$
+
+$$\text {and } h\left(\delta_t^{(a)}\right)=\frac{f^{(a)}\left(\delta_t^{(a)}\right)}{\gamma} \cdot\left(1-e^{\left.-\gamma \cdot \delta_t^{(a)}+S_t-Q_t^{(a)}\right)}\right)$$
 
 To maximize $g\left(\delta_t^{(b)}\right)$, differentiate $g$ with respect to $\delta_t^{(b)}$ and set to 0 :
 
-$$
-\begin{aligned}
-& e^{-\gamma \cdot\left(\delta_t^{(b) *}-S_t+Q_t^{(b)}\right)} \cdot\left(\gamma \cdot f^{(b)}\left(\delta_t^{(b)^*}\right)-\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)\right)+\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)=0 \\
-\Rightarrow & \delta_t^{(b)^*}=S_t-P_t^{(b)^*}=S_t-Q_t^{(b)}+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \frac{f^{(b)}\left(\delta_t^{(b)^*}\right)}{\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)}\right)
-\end{aligned}
-$$
+$$e^{-\gamma \cdot\left(\delta_t^{(b) *}-S_t+Q_t^{(b)}\right)} \cdot\left(\gamma \cdot f^{(b)}\left(\delta_t^{(b)^*}\right)-\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)\right)+\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)=0$$
+
+$$\Rightarrow \delta_t^{(b)^*}=S_t-P_t^{(b)^*}=S_t-Q_t^{(b)}+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \frac{f^{(b)}\left(\delta_t^{(b)^*}\right)}{\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)}\right)$$
 
 To maximize $h\left(\delta_t^{(a)}\right)$, differentiate $h$ with respect to $\delta_t^{(a)}$ and set to 0 :
 
-$$
-\begin{aligned}
-& e^{-\gamma \cdot\left(\delta_t^{(a)^*}+S_t-Q_t^{(a)}\right)} \cdot\left(\gamma \cdot f^{(a)}\left(\delta_t^{(a)^*}\right)-\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)\right)+\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)=0 \\
-& \Rightarrow \delta_t^{(a)^*}=P_t^{(a)^*}-S_t=Q_t^{(a)}-S_t+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \frac{f^{(a)}\left(\delta_t^{(a)^*}\right)}{\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)}\right)
-\end{aligned}
-$$
+$$e^{-\gamma \cdot\left(\delta_t^{(a)^*}+S_t-Q_t^{(a)}\right)} \cdot\left(\gamma \cdot f^{(a)}\left(\delta_t^{(a)^*}\right)-\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)\right)+\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)=0$$
+
+$$\Rightarrow \delta_t^{(a)^*}=P_t^{(a)^*}-S_t=Q_t^{(a)}-S_t+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \frac{f^{(a)}\left(\delta_t^{(a)^*}\right)}{\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)}\right)$$
+
 
 Equations (10.16) and (10.17) are implicit equations for $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$, respectively. Now let us write the PDE in terms of the Optimal Bid and Ask Spreads:
 
-$$
-\begin{aligned}
-& \frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right) \\
-& +\frac{f^{(b)}\left(\delta_t^{(b)^*}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(b) *}-S_t+\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t\right)\right)}\right) \\
-& +\frac{f^{(a)}\left(\delta_t^{(a)^*}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(a)^*}+S_t+\theta\left(t, S_t, I_t-1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)=0
-\end{aligned}
-$$
+$$\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)$$
+
+$$+\frac{f^{(b)}\left(\delta_t^{(b)^*}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(b) *}-S_t+\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)$$
+
+$$+\frac{f^{(a)}\left(\delta_t^{(a)^*}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(a)^*}+S_t+\theta\left(t, S_t, I_t-1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)=0$$
 
 with boundary condition: $\theta\left(T, S_T, I_T\right)=I_T \cdot S_T$
 How do we go about solving this? Here are the steps:
@@ -301,12 +285,9 @@ $$
 
 The formulas for the Indifference Mid Price and the Indifference Bid-Ask Price Spread are as follows:
 
-$$
-\begin{gathered}
-Q_t^{(m)}=S_t-I_t \cdot \gamma \cdot \sigma^2 \cdot(T-t) \\
-Q_t^{(a)}-Q_t^{(b)}=\gamma \cdot \sigma^2 \cdot(T-t)
-\end{gathered}
-$$
+$$Q_t^{(m)}=S_t-I_t \cdot \gamma \cdot \sigma^2 \cdot(T-t)$$
+
+$$Q_t^{(a)}-Q_t^{(b)}=\gamma \cdot \sigma^2 \cdot(T-t)$$
 
 These results for the simple case of no-market-making-after-time-t serve as approximations for our problem of optimal market-making. Think of $Q_t^{(m)}$ as a pseudo mid price for the market-maker, an adjustment to the OB mid price $S_t$ that takes into account the magnitude and sign of $I_t$. If the market-maker is long inventory $\left(I_t>0\right)$, then $Q_t^{(m)}<S_t$, which makes intuitive sense since the market-maker is interested in reducing her risk of inventory buildup and so, would be be more inclined to sell than buy, leading her to show bid and ask prices whose average is lower than the OB mid price $S_t$. Likewise, if the marketmaker is short inventory $\left(I_t<0\right)$, then $Q_t^{(m)}>S_t$ indicating inclination to buy rather than sell.
 
@@ -318,12 +299,9 @@ $$
 
 Visualize this ascending sequence of prices $\left[P_t^{(b)^*}, Q_t^{(b)}, Q_t^{(m)}, Q_t^{(a)}, P_t^{(a)^*}\right]$ as jointly sliding up/down (relative to OB mid price $S_t$ ) as a function of the inventory $I_t^{\prime}$ 's magnitude and sign, and perceive $P_t^{(b)^*}, P_t^{(a)^*}$ in terms of their spreads to the pseudo mid price $Q_t^{(m)}$ :
 
-$$
-\begin{aligned}
-& Q_t^{(b)}-P_t^{(m)^*}=\frac{Q_t^{(b)}+Q_t^{(a)}}{2}+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \frac{f^{(b)}\left(\delta_t^{(b)^*}\right)}{\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)}\right) \\
-& P_t^{(a)^*}-Q_t^{(m)}=\frac{Q_t^{(b)}+Q_t^{(a)}}{2}+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \frac{f^{(a)}\left(\delta_t^{(a)^*}\right)}{\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)}\right)
-\end{aligned}
-$$
+$$Q_t^{(b)}-P_t^{(m)^*}=\frac{Q_t^{(b)}+Q_t^{(a)}}{2}+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \frac{f^{(b)}\left(\delta_t^{(b)^*}\right)}{\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)}\right)$$
+
+$$P_t^{(a)^*}-Q_t^{(m)}=\frac{Q_t^{(b)}+Q_t^{(a)}}{2}+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \ \frac{f^{(a)}\left(\delta_t^{(a)^*}\right)}{\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)}\right)$$
 
 
 
@@ -336,12 +314,10 @@ $$
 
 This reduces Equations (10.16) and (10.17) to:
 
-$$
-\begin{aligned}
-& \delta_t^{(b)^*}=S_t-Q_t^{(b)}+\frac{1}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right) \\
-& \delta_t^{(a)^*}=Q_t^{(a)}-S_t+\frac{1}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)
-\end{aligned}
-$$
+$$\delta_t^{(b)^*}=S_t-Q_t^{(b)}+\frac{1}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)$$
+
+$$\delta_t^{(a)^*}=Q_t^{(a)}-S_t+\frac{1}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)$$
+
 
 which means $P_t^{(b)^*}$ and $P_t^{(a)^*}$ are equidistant from $Q_t^{(m)}$. Substituting these simplified $\delta_t^{(b)^*}, \delta_t^{(a)^*}$ in Equation (10.18) reduces the PDE to:
 
