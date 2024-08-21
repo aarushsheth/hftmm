@@ -14,7 +14,7 @@ Assume there are a finite number of time steps indexed by $t=0,1, \ldots, T$. As
 - Random variable $X_t^{(b)} \in \mathbb{Z}_{\geq 0}$ refers to the total number of market-maker's Bid Shares that have been transacted against (by MOs or by Sell LOs) up to time $t\left(X_t^{(b)}\right.$ is often referred to as the cumulative "hits" up to time $t$, as in "the market-maker's buy offer has been $h i t^{\prime \prime}$ ).
 - Random variable $X_t^{(a)} \in \mathbb{Z}_{\geq 0}$ refers to the total number of market-maker's Ask Shares that have been transacted against (by MOs or by Buy LOs) up to time $t\left(X_t^{(a)}\right.$ is often referred to as the cumulative "lifts" up to time $t$, as in "the market-maker's sell offer has been lifted").
 
-With this notation in place, we can write the trading account balance equation for all $t=0,1, \ldots, T-1$ as follows:
+With this notation, we can write the trading account balance equation for all $t=0,1, \ldots, T-1$ as follows:
 $$
 W_{t+1}=W_t+P_t^{(a)} \cdot\left(X_{t+1}^{(a)}-X_t^{(a)}\right)-P_t^{(b)} \cdot\left(X_{t+1}^{(b)}-X_t^{(b)}\right)
 $$
