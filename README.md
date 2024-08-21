@@ -50,7 +50,7 @@ $$
 R_{t+1}:= \begin{cases}0 & \text { for } 1 \leq t+1 \leq T-1 \\ U\left(W_T+I_T \cdot S_T\right) & \text { for } t+1=T\end{cases}
 $$
 
-The goal is to find an Optimal Policy $\pi^*=\left(\pi_0^*, \pi_1^*, \ldots, \pi_{T-1}^*\right)$, where
+The goal is to find an Optimal Policy $\pi^* =\left(\pi_0^*, \pi_1^*, \ldots, \pi_{T-1}^*\right)$, where
 
 $$
 \pi_t^*\left(\left(S_t, W_t, I_t\right)\right)=\left(P_t^{(b)}, N_t^{(b)}, P_t^{(a)}, N_t^{(a)}\right)
