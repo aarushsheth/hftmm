@@ -1,2 +1,1 @@
-# High-frequency-trading-in-a-limit-order-book
-High-frequency trading in a limit order book
+# High Frequency Trading in a Limit Order Book
