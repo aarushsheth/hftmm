@@ -135,7 +135,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 // Bin the P&L values into discrete ranges and plot the distribution
 fn plot_pnl_distribution(pnl_values: &[f64]) -> Result<(), Box<dyn std::error::Error>> {
-    let root = BitMapBackend::new("pnl_distribution.png", (800, 600)).into_drawing_area();
+    let root = BitMapBackend::new("pnl_distribution.png", (1280, 720)).into_drawing_area();
     root.fill(&WHITE)?;
 
     let (min_pnl, max_pnl) = pnl_values.iter().fold((f64::INFINITY, f64::NEG_INFINITY), |(min, max), &v| {
