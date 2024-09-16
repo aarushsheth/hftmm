@@ -139,7 +139,7 @@ $$
 
 with the terminal condition:
 $$
-V^*(T, S_T, W_T, I_T) = -e^{-\gamma \cdot (W_T + I_T \cdot S_T)}
+V^ *(T, S_T, W_T, I_T) = -e^{-\gamma \cdot (W_T + I_T \cdot S_T)}
 $$
 
 Solving the HJB equation provides the optimal spreads $\delta_t^{(b)}$ and $\delta_t^{(a)}$, which determine the bid and ask prices for the market-maker.
