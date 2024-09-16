@@ -326,7 +326,7 @@ $$\delta_t^{(a)^*}=Q_t^{(a)}-S_t+\frac{1}{\gamma} \cdot \log \left(1+\frac{\gamm
 which means $P_t^{(b)^*}$ and $P_t^{(a)^*}$ are equidistant from $Q_t^{(m)}$. Substituting these simplified $\delta_t^{(b)^*}, \delta_t^{(a)^*}$ in Equation (10.18) reduces the PDE to:
 
 $$
-\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)+\frac{c}{k+\gamma} \cdot\left(e^{-k \cdot \delta_t^{(b)^*}}+e^{-k \cdot \delta_t^{(a)^*}}\right)=0
+\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta{\partial S_t}\right)^2\right)+\frac{c}{k+\gamma} \cdot\left(e^{-k \cdot \delta_t^{(b)^*}}+e^{-k \cdot \delta_t^{(a)^*}}\right)=0
 $$
 
 $$
@@ -338,7 +338,7 @@ Note that this PDE (10.21) involves $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$. H
 First, we make a linear approximation for $e^{-k \cdot \delta_t^{(b)^*}}$ and $e^{-k \cdot \delta_t^{(a)^*}}$ in PDE (10.21) as follows:
 
 $$
-\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)+\frac{c}{k+\gamma} \cdot\left(1-k \cdot \delta_t^{(b)^*}+1-k \cdot \delta_t^{(a)^*}\right)=0
+\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta{\partial S_t}\right)^2\right)+\frac{c}{k+\gamma} \cdot\left(1-k \cdot \delta_t^{(b)^*}+1-k \cdot \delta_t^{(a)^*}\right)=0
 $$
 
 Combining the Equations (10.19), (10.20), (10.14) and (10.15) gives us:
@@ -351,7 +351,7 @@ With this expression for $\delta_t^{(b)^*}+\delta_t^{(a)^*}, \operatorname{PDE}(
 
 $$
 \begin{aligned}
-\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot & \left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)+\frac{c}{k+\gamma} \cdot\left(2-\frac{2 k}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)\right. \\
+\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot & \left(\frac{\partial^2 \theta{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta{\partial S_t}\right)^2\right)+\frac{c}{k+\gamma} \cdot\left(2-\frac{2 k}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)\right. \\
 & \left.-k \cdot\left(2 \theta\left(t, S_t, I_t\right)-\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t-1\right)\right)\right)=0
 \end{aligned}
 $$
@@ -472,4 +472,3 @@ Outer Spreads $P_t^{(a)^*}-Q_t^{(a)}=Q_t^{(b)}-P_t^{(b)^*}=\frac{1}{\gamma} \cdo
 Inner Spreads $Q_t^{(a)}-Q_t^{(m)}=Q_t^{(m)}-Q_t^{(b)}=\frac{\gamma \cdot \sigma^2 \cdot(T-t)}{2}$
 
 This completes the analytical approximation to the solution of the Avellaneda-Stoikov continuous-time formulation of the Optimal Market-Making problem.
-
