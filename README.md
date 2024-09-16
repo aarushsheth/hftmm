@@ -6,7 +6,6 @@ In [Avellaneda and Stoikov's High-frequency trading in a limit order book(2007)]
 *PnL from 10,000 Simulations of my implementation of their model*
 
 
-### Market-Maker's Inventory and Account Value
 
 We begin by defining several key variables:
 - Let $W_t \in \mathbb{R}$ denote the market-maker's account value at time $t$.
@@ -17,7 +16,6 @@ We begin by defining several key variables:
 - Let $P_t^{(a)} \in \mathbb{R}^{+}$ denote the market-maker's ask price at time $t$.
 - Let $N_t^{(a)} \in \mathbb{Z}^{+}$ denote the market-maker's quoted ask volume (the number of shares they are willing to sell) at time $t$.
 
-### Spreads and Market Dynamics
 
 To describe the market-maker’s quoted prices relative to the mid-price of the LOB, we introduce the following definitions:
 - The **bid spread** at time $t$ is given by:
@@ -37,14 +35,12 @@ To describe the market-maker’s quoted prices relative to the mid-price of the 
   \delta_t^{(b)} + \delta_t^{(a)} = P_t^{(a)} - P_t^{(b)}
   $$
 
-### Cumulative Transactions
 
 Next, we define random variables to keep track of the cumulative number of shares that the market-maker has transacted with:
 - Let $X_t^{(b)} \in \mathbb{Z}_{\geq 0}$ denote the total number of bid shares that have been transacted against (i.e., market buy orders that hit the market-maker’s bid or sell limit orders that match it) by time $t$. This is often referred to as the cumulative "hits" on the bid.
   
 - Let $X_t^{(a)} \in \mathbb{Z}_{\geq 0}$ denote the total number of ask shares that have been transacted against (i.e., market sell orders that hit the market-maker’s ask or buy limit orders that match it) by time $t$. This is often referred to as the cumulative "lifts" on the ask.
 
-### Trading Account Balance Dynamics
 
 The dynamics of the market-maker’s account value $W_t$ over time depend on the transacted bid and ask shares. Specifically, the trading account balance equation for time $t = 0, 1, \dots, T-1$ is given by:
 
@@ -54,7 +50,6 @@ $$
 
 Here, $P_t^{(a)} \cdot \left(X_{t+1}^{(a)} - X_t^{(a)}\right)$ represents the revenue from selling shares at the ask price, and $P_t^{(b)} \cdot \left(X_{t+1}^{(b)} - X_t^{(b)}\right)$ represents the cost of buying shares at the bid price.
 
-### Inventory Dynamics
 
 Since the market-maker starts with zero inventory ($I_0 = 0$), the inventory $I_t$ at any time $t$ is given by the difference between the number of bid and ask shares transacted up to time $t$:
 $$
@@ -63,7 +58,6 @@ $$
 
 This means that the inventory increases when more bid shares are transacted (i.e., the market-maker buys shares) and decreases when more ask shares are transacted (i.e., the market-maker sells shares).
 
-### Objective: Maximizing Expected Utility
 
 The market-maker’s objective is to maximize the expected utility of the terminal account value, which includes both the cash holdings (account value $W_T$) and the value of the final inventory (which is marked-to-market at the mid-price $S_T$). Specifically, the market-maker seeks to maximize the following:
 
@@ -77,7 +71,6 @@ U(x) = -e^{-\gamma x}
 $$
 where $\gamma > 0$ is a risk-aversion parameter.
 
-### Problem Formulation as a Markov Decision Process
 
 This optimization problem can be formulated as a discrete-time, finite-horizon Markov Decision Process (MDP). The state of the system at time $t$ is described by the tuple $\left(S_t, W_t, I_t\right)$, and the action taken by the market-maker involves setting the bid and ask prices ($P_t^{(b)}, P_t^{(a)}$) and the corresponding bid and ask volumes ($N_t^{(b)}, N_t^{(a)}$).
 
@@ -98,7 +91,6 @@ U\left(W_T + I_T \cdot S_T\right) & \text{for } t+1 = T
 \end{cases}
 $$
 
-### Optimal Policy
 
 The goal is to find an optimal policy $\pi^* = \left(\pi_0^*, \pi_1^*, \dots, \pi_{T-1}^*\right)$, where the policy at each time step $t$ maps the state $\left(S_t, W_t, I_t\right)$ to the optimal action $\left(P_t^{(b)}, N_t^{(b)}, P_t^{(a)}, N_t^{(a)}\right)$. The optimal policy maximizes the expected reward:
 
@@ -106,7 +98,6 @@ $$
 \mathbb{E}\left[\sum^T R_t\right] = \mathbb{E}\left[U\left(W_T + I_T \cdot S_T\right)\right]
 $$
 
-### Continuous-Time Formulation
 
 A continuous-time version of this problem was formulated by Avellaneda and Stoikov (2008). In this formulation, the bid and ask volumes are modeled using Poisson processes with rates $\lambda_t^{(b)}$ and $\lambda_t^{(a)}$ that depend on the bid and ask spreads:
 $$
@@ -119,7 +110,6 @@ $$
 $$
 for decreasing functions $f^{(b)}(\cdot)$ and $f^{(a)}(\cdot)$. These functions represent the market's response to the market-maker's bid and ask spreads: larger spreads result in fewer transactions.
 
-### Mid-Price Dynamics and Utility
 
 The mid-price $S_t$ is assumed to follow a scaled Brownian motion:
 $$
@@ -133,7 +123,6 @@ U(x) = -e^{-\gamma x}
 $$
 with risk-aversion parameter $\gamma > 0$.
 
-### Hamilton-Jacobi-Bellman (HJB) Equation
 
 The continuous-time problem can be expressed using the Hamilton-Jacobi-Bellman (HJB) equation. The optimal value function $V^*(t, S_t, W_t, I_t)$ represents the maximum expected utility starting at time $t$ with state variables $S_t$, $W_t$, and $I_t$. The HJB equation for this problem is:
 
@@ -148,7 +137,6 @@ $$
 
 Solving the HJB equation provides the optimal spreads $\delta_t^{(b)}$ and $\delta_t^{(a)}$, which determine the bid and ask prices for the market-maker.
 
-### Solving the HJB Equation
 
 To solve the Hamilton-Jacobi-Bellman (HJB) equation, we begin by making an educated guess about the functional form of the value function $V^*(t, S_t, W_t, I_t)$. Since the utility function is of the form $U(x) = -e^{-\gamma x}$, a reasonable assumption is that the optimal value function can be expressed as:
 
@@ -158,7 +146,6 @@ $$
 
 where $\theta(t, S_t, I_t)$ is an unknown function that we will solve for. Substituting this form into the HJB equation allows us to simplify the problem and reduce it to a Partial Differential Equation (PDE) for $\theta(t, S_t, I_t)$.
 
-#### Substituting into the HJB Equation
 
 Substituting $V^*(t, S_t, W_t, I_t) = -e^{-\gamma \cdot (W_t + \theta(t, S_t, I_t))}$ into the HJB equation, we first differentiate $V^*$ with respect to $t$, $S_t$, and the other variables. Let’s outline the steps of substitution:
 
@@ -203,7 +190,6 @@ Substituting $V^*(t, S_t, W_t, I_t) = -e^{-\gamma \cdot (W_t + \theta(t, S_t, I_
    \theta(T, S_T, I_T) = I_T \cdot S_T
    $$
 
-### Maximizing the Spreads
 
 At this stage, we maximize the two expressions involving $\delta_t^{(b)}$ and $\delta_t^{(a)}$. These represent the market-maker’s optimal bid and ask spreads, respectively. The expressions inside the maximizations involve functions $f^{(b)}(\delta_t^{(b)})$ and $f^{(a)}(\delta_t^{(a)})$, which model the likelihood of market participants hitting or lifting the market-maker’s bid or ask, depending on how far the prices are from the mid-price.
 
@@ -218,13 +204,11 @@ $$
 \frac{\partial}{\partial \delta_t^{(a)}} \left\{ \frac{f^{(a)}\left(\delta_t^{(a)}\right)}{\gamma} \cdot \left(1 - e^{-\gamma \cdot \left(\delta_t^{(a)} + S_t + \theta(t, S_t, I_t-1) - \theta(t, S_t, I_t)\right)}\right)\right\} = 0
 $$
 
-#### Bid Spread Solution:
 Differentiating and solving yields an implicit equation for the optimal bid spread $\delta_t^{(b)^*}$:
 $$
 \delta_t^{(b)^*} = S_t - Q_t^{(b)} + \frac{1}{\gamma} \cdot \log\left(1 + \gamma \cdot \frac{f^{(b)}(\delta_t^{(b)^*})}{\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}(\delta_t^{(b)^*})}\right)
 $$
 
-#### Ask Spread Solution:
 Similarly, for the optimal ask spread $\delta_t^{(a)^*}$, we get:
 $$
 \delta_t^{(a)^*} = Q_t^{(a)} - S_t + \frac{1}{\gamma} \cdot \log\left(1 + \gamma \cdot \frac{f^{(a)}(\delta_t^{(a)^*})}{\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}(\delta_t^{(a)^*})}\right)
@@ -232,9 +216,8 @@ $$
 
 These are implicit equations for $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$, which can be solved numerically.
 
-### Indifference Prices and Spreads
 
-To build further intuition, we define the **Indifference Bid Price** $Q_t^{(b)}$ and **Indifference Ask Price** $Q_t^{(a)}$:
+We define the **Indifference Bid Price** $Q_t^{(b)}$ and **Indifference Ask Price** $Q_t^{(a)}$:
 - **Indifference Bid Price**: The price at which the market-maker is indifferent between keeping their inventory or buying one more share:
   $$
   Q_t^{(b)} = \theta(t, S_t, I_t + 1) - \theta(t, S_t, I_t)
@@ -251,14 +234,12 @@ Q_t^{(m)} = \frac{Q_t^{(b)} + Q_t^{(a)}}{2}
 $$
 which represents the market-maker's perception of the fair price adjusted for their inventory risk.
 
-### Simplifying the HJB Equation
 
 Substituting these expressions for $Q_t^{(b)}$ and $Q_t^{(a)}$ back into the HJB equation leads to the following PDE for $\theta(t, S_t, I_t)$:
 $$
 \frac{\partial \theta}{\partial t} + \frac{\sigma^2}{2} \cdot \left(\frac{\partial^2 \theta}{\partial S_t^2} - \gamma \cdot \left(\frac{\partial \theta}{\partial S_t}\right)^2\right) + \frac{f^{(b)}(\delta_t^{(b)^*})}{\gamma} \cdot \left(1 - e^{-\gamma \cdot (\delta_t^{(b)^*} - S_t + Q_t^{(b)})}\right) + \frac{f^{(a)}(\delta_t^{(a)^*})}{\gamma} \cdot \left(1 - e^{-\gamma \cdot (\delta_t^{(a)^*} + S_t + Q_t^{(a)})}\right) = 0
 $$
 
-### Approximating the Solution
 
 To simplify further, we make assumptions about the form of the transaction rate functions $f^{(b)}(\delta)$ and $f^{(a)}(\delta)$. A common choice is to assume exponential forms for these functions:
 $$
@@ -273,7 +254,6 @@ $$
 \delta_t^{(a)^*} = Q_t^{(a)} - S_t + \frac{1}{\gamma} \cdot \log\left(1 + \frac{\gamma}{k}\right)
 $$
 
-### Final Solution for Optimal Spreads and Prices
 
 The final expressions for the optimal bid and ask prices, incorporating both the inventory adjustment and risk-aversion effects, are given by:
 $$
