@@ -1,6 +1,10 @@
 # High Frequency Trading in a Limit Order Book
 
-We are considering a model of a market-maker who trades in a Limit Order Book (LOB) over a finite number of discrete time steps indexed by $t = 0, 1, \dots, T$. In this model, the market-maker provides liquidity by quoting bid and ask prices at each time step $t$, and we model the dynamics of their trading behavior using basic notation, assumptions, and mathematical relationships.
+We are considering a model of a market-maker who trades in a Limit Order Book (LOB) over a finite number of discrete time steps indexed by $t = 0, 1, \dots, T$. In this model, the market-maker provides liquidity by quoting bid and ask prices at each time step $t$, and we model the dynamics of their trading behavior.
+
+![10,000 Simulations of the model](mm/pnl_distribution.png)
+*10,000 Simulations of the model*
+
 
 ### Market-Maker's Inventory and Account Value
 
@@ -144,6 +148,144 @@ $$
 
 Solving the HJB equation provides the optimal spreads $\delta_t^{(b)}$ and $\delta_t^{(a)}$, which determine the bid and ask prices for the market-maker.
 
-### Summary
+### Solving the HJB Equation
+
+To solve the Hamilton-Jacobi-Bellman (HJB) equation, we begin by making an educated guess about the functional form of the value function $V^*(t, S_t, W_t, I_t)$. Since the utility function is of the form $U(x) = -e^{-\gamma x}$, a reasonable assumption is that the optimal value function can be expressed as:
+
+$$
+V^*(t, S_t, W_t, I_t) = -e^{-\gamma \cdot \left(W_t + \theta(t, S_t, I_t)\right)}
+$$
+
+where $\theta(t, S_t, I_t)$ is an unknown function that we will solve for. Substituting this form into the HJB equation allows us to simplify the problem and reduce it to a Partial Differential Equation (PDE) for $\theta(t, S_t, I_t)$.
+
+#### Substituting into the HJB Equation
+
+Substituting $V^*(t, S_t, W_t, I_t) = -e^{-\gamma \cdot (W_t + \theta(t, S_t, I_t))}$ into the HJB equation, we first differentiate $V^*$ with respect to $t$, $S_t$, and the other variables. Let’s outline the steps of substitution:
+
+1. **Time Derivative**:
+   $$
+   \frac{\partial V^*}{\partial t} = \gamma \cdot e^{-\gamma \cdot \left(W_t + \theta(t, S_t, I_t)\right)} \cdot \frac{\partial \theta}{\partial t}
+   $$
+
+2. **Price Derivatives**:
+   $$
+   \frac{\partial V^*}{\partial S_t} = \gamma \cdot e^{-\gamma \cdot \left(W_t + \theta(t, S_t, I_t)\right)} \cdot \frac{\partial \theta}{\partial S_t}
+   $$
+   $$
+   \frac{\partial^2 V^*}{\partial S_t^2} = \gamma \cdot e^{-\gamma \cdot \left(W_t + \theta(t, S_t, I_t)\right)} \cdot \frac{\partial^2 \theta}{\partial S_t^2} - \gamma^2 \cdot e^{-\gamma \cdot \left(W_t + \theta(t, S_t, I_t)\right)} \cdot \left(\frac{\partial \theta}{\partial S_t}\right)^2
+   $$
+
+3. **Inventory and Spread Updates**:
+   The bid and ask transaction terms from the Poisson processes also modify the function $\theta$. The changes in inventory are captured by the shifts in $\theta$ when the market-maker buys (increases $I_t$) or sells (decreases $I_t$). Specifically, the updates for the bid and ask spreads affect the function $\theta$ as follows:
+
+   - For a hit on the bid, the inventory increases by 1 and the cash decreases by $S_t - \delta_t^{(b)}$. Thus:
+     $$
+     V^*(t, S_t, W_t - S_t + \delta_t^{(b)}, I_t + 1) = -e^{-\gamma \cdot \left(W_t - S_t + \delta_t^{(b)} + \theta(t, S_t, I_t + 1)\right)}
+     $$
+     - For a lift on the ask, the inventory decreases by 1 and the cash increases by $S_t + \delta_t^{(a)}$. Thus:
+     $$
+     V^*(t, S_t, W_t + S_t + \delta_t^{(a)}, I_t - 1) = -e^{-\gamma \cdot \left(W_t + S_t + \delta_t^{(a)} + \theta(t, S_t, I_t - 1)\right)}
+     $$
+
+4. **HJB Equation Substitution**:
+   Plugging these derivatives into the HJB equation and simplifying, we obtain the following PDE for $\theta(t, S_t, I_t)$:
+
+   $$
+   \frac{\partial \theta}{\partial t} + \frac{\sigma^2}{2} \cdot \left(\frac{\partial^2 \theta}{\partial S_t^2} - \gamma \cdot \left(\frac{\partial \theta}{\partial S_t}\right)^2\right) + \max_{\delta_t^{(b)}} \left\{\frac{f^{(b)}\left(\delta_t^{(b)}\right)}{\gamma} \cdot \left(1 - e^{-\gamma \cdot \left(\delta_t^{(b)} - S_t + \theta(t, S_t, I_t+1) - \theta(t, S_t, I_t)\right)}\right)\right\}
+   $$
+
+   $$
+   + \max_{\delta_t^{(a)}} \left\{\frac{f^{(a)}\left(\delta_t^{(a)}\right)}{\gamma} \cdot \left(1 - e^{-\gamma \cdot \left(\delta_t^{(a)} + S_t + \theta(t, S_t, I_t-1) - \theta(t, S_t, I_t)\right)}\right)\right\} = 0
+   $$
+
+   with the terminal condition:
+   $$
+   \theta(T, S_T, I_T) = I_T \cdot S_T
+   $$
+
+### Maximizing the Spreads
+
+At this stage, we maximize the two expressions involving $\delta_t^{(b)}$ and $\delta_t^{(a)}$. These represent the market-maker’s optimal bid and ask spreads, respectively. The expressions inside the maximizations involve functions $f^{(b)}(\delta_t^{(b)})$ and $f^{(a)}(\delta_t^{(a)})$, which model the likelihood of market participants hitting or lifting the market-maker’s bid or ask, depending on how far the prices are from the mid-price.
+
+By solving these maximizations, we can find the optimal bid and ask spreads, $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$, respectively. The maximization equations are typically solved by differentiating the respective terms with respect to $\delta_t^{(b)}$ and $\delta_t^{(a)}$, and setting the derivatives to zero.
+
+For the bid spread, we solve:
+$$
+\frac{\partial}{\partial \delta_t^{(b)}} \left\{ \frac{f^{(b)}\left(\delta_t^{(b)}\right)}{\gamma} \cdot \left(1 - e^{-\gamma \cdot \left(\delta_t^{(b)} - S_t + \theta(t, S_t, I_t+1) - \theta(t, S_t, I_t)\right)}\right)\right\} = 0
+$$
+and for the ask spread:
+$$
+\frac{\partial}{\partial \delta_t^{(a)}} \left\{ \frac{f^{(a)}\left(\delta_t^{(a)}\right)}{\gamma} \cdot \left(1 - e^{-\gamma \cdot \left(\delta_t^{(a)} + S_t + \theta(t, S_t, I_t-1) - \theta(t, S_t, I_t)\right)}\right)\right\} = 0
+$$
+
+#### Bid Spread Solution:
+Differentiating and solving yields an implicit equation for the optimal bid spread $\delta_t^{(b)^*}$:
+$$
+\delta_t^{(b)^*} = S_t - Q_t^{(b)} + \frac{1}{\gamma} \cdot \log\left(1 + \gamma \cdot \frac{f^{(b)}(\delta_t^{(b)^*})}{\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}(\delta_t^{(b)^*})}\right)
+$$
+
+#### Ask Spread Solution:
+Similarly, for the optimal ask spread $\delta_t^{(a)^*}$, we get:
+$$
+\delta_t^{(a)^*} = Q_t^{(a)} - S_t + \frac{1}{\gamma} \cdot \log\left(1 + \gamma \cdot \frac{f^{(a)}(\delta_t^{(a)^*})}{\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}(\delta_t^{(a)^*})}\right)
+$$
+
+These are implicit equations for $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$, which can be solved numerically.
+
+### Indifference Prices and Spreads
+
+To build further intuition, we define the **Indifference Bid Price** $Q_t^{(b)}$ and **Indifference Ask Price** $Q_t^{(a)}$:
+- **Indifference Bid Price**: The price at which the market-maker is indifferent between keeping their inventory or buying one more share:
+  $$
+  Q_t^{(b)} = \theta(t, S_t, I_t + 1) - \theta(t, S_t, I_t)
+  $$
+  
+- **Indifference Ask Price**: The price at which the market-maker is indifferent between keeping their inventory or selling one share:
+  $$
+  Q_t^{(a)} = \theta(t, S_t, I_t) - \theta(t, S_t, I_t - 1)
+  $$
+
+The **Indifference Mid Price** is then given by the average of the indifference bid and ask prices:
+$$
+Q_t^{(m)} = \frac{Q_t^{(b)} + Q_t^{(a)}}{2}
+$$
+which represents the market-maker's perception of the fair price adjusted for their inventory risk.
+
+### Simplifying the HJB Equation
+
+Substituting these expressions for $Q_t^{(b)}$ and $Q_t^{(a)}$ back into the HJB equation leads to the following PDE for $\theta(t, S_t, I_t)$:
+$$
+\frac{\partial \theta}{\partial t} + \frac{\sigma^2}{2} \cdot \left(\frac{\partial^2 \theta}{\partial S_t^2} - \gamma \cdot \left(\frac{\partial \theta}{\partial S_t}\right)^2\right) + \frac{f^{(b)}(\delta_t^{(b)^*})}{\gamma} \cdot \left(1 - e^{-\gamma \cdot (\delta_t^{(b)^*} - S_t + Q_t^{(b)})}\right) + \frac{f^{(a)}(\delta_t^{(a)^*})}{\gamma} \cdot \left(1 - e^{-\gamma \cdot (\delta_t^{(a)^*} + S_t + Q_t^{(a)})}\right) = 0
+$$
+
+### Approximating the Solution
+
+To simplify further, we make assumptions about the form of the transaction rate functions $f^{(b)}(\delta)$ and $f^{(a)}(\delta)$. A common choice is to assume exponential forms for these functions:
+$$
+f^{(b)}(\delta) = c \cdot e^{-k \cdot \delta}, \quad f^{(a)}(\delta) = c \cdot e^{-k \cdot \delta}
+$$
+where $c > 0$ and $k > 0$ are constants. Under these assumptions, the expressions for the optimal bid and ask spreads become:
+
+$$
+\delta_t^{(b)^*} = S_t - Q_t^{(b)} + \frac{1}{\gamma} \cdot \log\left(1 + \frac{\gamma}{k}\right)
+$$
+$$
+\delta_t^{(a)^*} = Q_t^{(a)} - S_t + \frac{1}{\gamma} \cdot \log\left(1 + \frac{\gamma}{k}\right)
+$$
+
+### Final Solution for Optimal Spreads and Prices
+
+The final expressions for the optimal bid and ask prices, incorporating both the inventory adjustment and risk-aversion effects, are given by:
+$$
+P_t^{(b)^*} = S_t - \delta_t^{(b)^*}, \quad P_t^{(a)^*} = S_t + \delta_t^{(a)^*}
+$$
+
+The optimal bid-ask spread is then:
+$$
+\delta_t^{(b)^*} + \delta_t^{(a)^*} = \gamma \cdot \sigma^2 \cdot (T - t) + \frac{2}{\gamma} \cdot \log\left(1 + \frac{\gamma}{k}\right)
+$$
+
+Thus, the market-maker adjusts their bid and ask prices based on their current inventory and the time remaining until the terminal period $T$.
+
 
 
