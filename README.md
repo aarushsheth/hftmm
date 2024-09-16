@@ -1,9 +1,9 @@
 # High Frequency Trading in a Limit Order Book
 
-We are considering a model of a market-maker who trades in a Limit Order Book (LOB) over a finite number of discrete time steps indexed by $t = 0, 1, \dots, T$. In this model, the market-maker provides liquidity by quoting bid and ask prices at each time step $t$, and we model the dynamics of their trading behavior.
+In [Avellaneda and Stoikov's High-frequency trading in a limit order book(2007)](https://math.nyu.edu/~avellane/HighFrequencyTrading.pdf), we consider a market-maker who trades in a Limit Order Book (LOB) over a finite number of discrete time steps indexed by $t = 0, 1, \dots, T$. In this model, the market-maker provides liquidity by quoting bid and ask prices at each time step $t$, and we model the dynamics of their trading behavior.
 
-![10,000 Simulations of the model](mm/pnl_distribution.png)
-*10,000 Simulations of the model*
+![10,000 Simulations of my implementation of their model](mm/pnl_distribution.png)
+*PnL from 10,000 Simulations of my implementation of their model*
 
 
 ### Market-Maker's Inventory and Account Value
@@ -178,11 +178,11 @@ Substituting $V^*(t, S_t, W_t, I_t) = -e^{-\gamma \cdot (W_t + \theta(t, S_t, I_
 3. **Inventory and Spread Updates**:
    The bid and ask transaction terms from the Poisson processes also modify the function $\theta$. The changes in inventory are captured by the shifts in $\theta$ when the market-maker buys (increases $I_t$) or sells (decreases $I_t$). Specifically, the updates for the bid and ask spreads affect the function $\theta$ as follows:
 
-   - For a hit on the bid, the inventory increases by 1 and the cash decreases by $S_t - \delta_t^{(b)}$. Thus:
+   - For a hit on the bid, the inventory increases by 1 and the cash decreases by $S_t - \delta_t^{(b)}$. As such:
      $$
      V^*(t, S_t, W_t - S_t + \delta_t^{(b)}, I_t + 1) = -e^{-\gamma \cdot \left(W_t - S_t + \delta_t^{(b)} + \theta(t, S_t, I_t + 1)\right)}
      $$
-     - For a lift on the ask, the inventory decreases by 1 and the cash increases by $S_t + \delta_t^{(a)}$. Thus:
+     - For a lift on the ask, the inventory decreases by 1 and the cash increases by $S_t + \delta_t^{(a)}$. As such:
      $$
      V^*(t, S_t, W_t + S_t + \delta_t^{(a)}, I_t - 1) = -e^{-\gamma \cdot \left(W_t + S_t + \delta_t^{(a)} + \theta(t, S_t, I_t - 1)\right)}
      $$
@@ -285,7 +285,7 @@ $$
 \delta_t^{(b)^*} + \delta_t^{(a)^*} = \gamma \cdot \sigma^2 \cdot (T - t) + \frac{2}{\gamma} \cdot \log\left(1 + \frac{\gamma}{k}\right)
 $$
 
-Thus, the market-maker adjusts their bid and ask prices based on their current inventory and the time remaining until the terminal period $T$.
+Therefore, the market-maker adjusts their bid and ask prices based on their current inventory and the time remaining until the terminal period $T$.
 
 
 
