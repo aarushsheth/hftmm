@@ -1,475 +1,375 @@
 # High Frequency Trading in a Limit Order Book
 
-Assume there are a finite number of time steps indexed by $t=0,1, \ldots, T$. Assume the market-maker always shows a bid price and ask price (at each time $t$ ) along with the associated bid shares and ask shares on the OB. Also assume, for ease of exposition, that the market-maker can add or remove bid/ask shares from the OB costlessly. We use the following notation:
-- Denote $W_t \in \mathbb{R}$ as the market-maker's trading account value at time $t$.
-- Denote $I_t \in \mathbb{Z}$ as the market-maker's inventory of shares at time $t$ (assume $I_0=$ 0 ). Note that the inventory can be positive or negative (negative means the marketmaker is short a certain number of shares).
-- Denote $S_t \in \mathbb{R}^{+}$ as the OB Mid Price at time $t$ (assume a stochastic process for $S_t$ )
-- Denote $P_t^{(b)} \in \mathbb{R}^{+}$ as the market-maker's Bid Price at time $t$.
-- Denote $N_t^{(b)} \in \mathbb{Z}^{+}$ as the market-maker's Bid Shares at time $t$.
-- Denote $P_t^{(a)} \in \mathbb{R}^{+}$ as the market-maker's Ask Price at time $t$.
-- Denote $N_t^{(a)} \in \mathbb{Z}^{+}$ as the market-maker's Ask Shares at time $t$.
-- We refer to $\delta_t^{(b)}=S_t-P_t^{(b)}$ as the market-maker's Bid Spread (relative to OB Mid).
-- We refer to $\delta_t^{(a)}=P_t^{(a)}-S_t$ as the market-maker's Ask Spread (relative to OB Mid).
-- We refer to $\delta_t^{(b)}+\delta_t^{(a)}=P_t^{(a)}-P_t^{(b)}$ as the market-maker's Bid-Ask Spread.
-- Random variable $X_t^{(b)} \in \mathbb{Z}_{\geq 0}$ refers to the total number of market-maker's Bid Shares that have been transacted against (by MOs or by Sell LOs) up to time $t\left(X_t^{(b)}\right.$ is often referred to as the cumulative "hits" up to time $t$, as in "the market-maker's buy offer has been $h i t^{\prime \prime}$ ).
-- Random variable $X_t^{(a)} \in \mathbb{Z}_{\geq 0}$ refers to the total number of market-maker's Ask Shares that have been transacted against (by MOs or by Buy LOs) up to time $t\left(X_t^{(a)}\right.$ is often referred to as the cumulative "lifts" up to time $t$, as in "the market-maker's sell offer has been lifted").
+Assume there are a finite number of time steps indexed by <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/eccac6892d5287deaf08ddcb3b98630a.svg?invert_in_darkmode" align=middle width=100.01675969999998pt height=22.465723500000017pt/>. Assume the market-maker always shows a bid price and ask price (at each time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> ) along with the associated bid shares and ask shares on the OB. Also assume, for ease of exposition, that the market-maker can add or remove bid/ask shares from the OB costlessly. We use the following notation:
+- Denote <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/d6572a514e64ed6b8573b4ed36caf954.svg?invert_in_darkmode" align=middle width=53.27613884999999pt height=22.648391699999998pt/> as the market-maker's trading account value at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/>.
+- Denote <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/59076cafb59b9e2e76189887384381a5.svg?invert_in_darkmode" align=middle width=44.063817599999986pt height=22.648391699999998pt/> as the market-maker's inventory of shares at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> (assume <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/d8298c579b9f9203862827bf893e0f48.svg?invert_in_darkmode" align=middle width=31.952042099999986pt height=22.465723500000017pt/> 0 ). Note that the inventory can be positive or negative (negative means the marketmaker is short a certain number of shares).
+- Denote <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/a4264bea2952275699eaac8e72fc2ae3.svg?invert_in_darkmode" align=middle width=57.92230289999999pt height=26.17730939999998pt/> as the OB Mid Price at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> (assume a stochastic process for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/> )
+- Denote <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/a8ce36b4fbfa866bf9f6233609a443fc.svg?invert_in_darkmode" align=middle width=71.76821849999999pt height=34.337843099999986pt/> as the market-maker's Bid Price at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/>.
+- Denote <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/37b91a7df5b11eb59d920a85b21983a9.svg?invert_in_darkmode" align=middle width=73.018176pt height=34.337843099999986pt/> as the market-maker's Bid Shares at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/>.
+- Denote <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/c620bdcca939ada00161f2431a4197f4.svg?invert_in_darkmode" align=middle width=73.11778154999999pt height=34.337843099999986pt/> as the market-maker's Ask Price at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/>.
+- Denote <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/49144f9e3f94cb1c86dae7990d766ec1.svg?invert_in_darkmode" align=middle width=74.36773904999998pt height=34.337843099999986pt/> as the market-maker's Ask Shares at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/>.
+- We refer to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/cb7c831bc978cfcab39cdc806339b0ba.svg?invert_in_darkmode" align=middle width=111.57290264999999pt height=34.337843099999986pt/> as the market-maker's Bid Spread (relative to OB Mid).
+- We refer to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/3ed7ef8768e101ff219ab6f87d8b0d9d.svg?invert_in_darkmode" align=middle width=114.27201885pt height=34.337843099999986pt/> as the market-maker's Ask Spread (relative to OB Mid).
+- We refer to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4fcbf70e44666c91eec01d1da4a18cde.svg?invert_in_darkmode" align=middle width=173.01396254999997pt height=34.337843099999986pt/> as the market-maker's Bid-Ask Spread.
+- Random variable <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2a1bd1201ea81d5b31b611227bd876ca.svg?invert_in_darkmode" align=middle width=79.66206929999998pt height=34.337843099999986pt/> refers to the total number of market-maker's Bid Shares that have been transacted against (by MOs or by Sell LOs) up to time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2b69945f2659e25326a15615f0be292c.svg?invert_in_darkmode" align=middle width=49.456656149999986pt height=37.80850590000001pt/> is often referred to as the cumulative "hits" up to time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/>, as in "the market-maker's buy offer has been <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8e109911a39166c88384714f4d733b1c.svg?invert_in_darkmode" align=middle width=28.65036239999999pt height=24.7161288pt/> ).
+- Random variable <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/6831da888cdc1d37222be00428504a73.svg?invert_in_darkmode" align=middle width=81.01163234999999pt height=34.337843099999986pt/> refers to the total number of market-maker's Ask Shares that have been transacted against (by MOs or by Buy LOs) up to time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/3e48cad26e001f9b153ac176b99c2d41.svg?invert_in_darkmode" align=middle width=50.80620104999999pt height=37.80850590000001pt/> is often referred to as the cumulative "lifts" up to time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/>, as in "the market-maker's sell offer has been lifted").
 
-With this notation, we can write the trading account balance equation for all $t=0,1, \ldots, T-1$ as follows:
+With this notation, we can write the trading account balance equation for all <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/837ba99e543f5d832b37360170b84451.svg?invert_in_darkmode" align=middle width=128.32715775pt height=22.465723500000017pt/> as follows:
 
-$$
-W_{t+1}=W_t+P_t^{(a)} \cdot\left(X_{t+1}^{(a)}-X_t^{(a)}\right)-P_t^{(b)} \cdot\left(X_{t+1}^{(b)}-X_t^{(b)}\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/5c6540bffa3b7efc7ef5c5de0162788f.svg?invert_in_darkmode" align=middle width=422.3630664pt height=29.58934275pt/></p>
 
-Note that since the inventory $I_0$ at time 0 is equal to 0 , the inventory $I_t$ at time $t$ is given by the equation:
+Note that since the inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/88fbd05154e7d6a65883f20e1b18a817.svg?invert_in_darkmode" align=middle width=13.77859724999999pt height=22.465723500000017pt/> at time 0 is equal to 0 , the inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/> at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> is given by the equation:
 
-$$
-I_t=X_t^{(b)}-X_t^{(a)}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ae9562f910e829c2c73ab56dd451457d.svg?invert_in_darkmode" align=middle width=119.1210636pt height=21.21447405pt/></p>
 
-The market-maker's goal is to maximize (for an appropriately shaped concave utility function $U(\cdot))$ the sum of the trading account value at time $T$ and the value of the inventory of shares held at time $T$, i.e., we maximize:
+The market-maker's goal is to maximize (for an appropriately shaped concave utility function <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7c632e02a92356b4de8082efd32bc270.svg?invert_in_darkmode" align=middle width=36.76031369999999pt height=24.65753399999998pt/> the sum of the trading account value at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2f118ee06d05f3c2d98361d9c30e38ce.svg?invert_in_darkmode" align=middle width=11.889314249999991pt height=22.465723500000017pt/> and the value of the inventory of shares held at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2f118ee06d05f3c2d98361d9c30e38ce.svg?invert_in_darkmode" align=middle width=11.889314249999991pt height=22.465723500000017pt/>, i.e., we maximize:
 
-$$
-\mathbb{E}\left[U\left(W_T+I_T \cdot S_T\right)\right]
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/badfb39623e15f94e918bb717d93fb05.svg?invert_in_darkmode" align=middle width=147.23307885pt height=16.438356pt/></p>
 
 
 
-As we alluded to earlier, this problem can be cast as a discrete-time finite-horizon Markov Decision Process (with discount factor $\gamma=1$ ). Following the usual notation for discrete-time finite-horizon MDPs, the order of activity for the MDP at each time step $t=0,1, \ldots, T-1$ is as follows:
+As we alluded to earlier, this problem can be cast as a discrete-time finite-horizon Markov Decision Process (with discount factor <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/bbe53220e817de918de6f4f75d9b508f.svg?invert_in_darkmode" align=middle width=39.56070194999999pt height=21.18721440000001pt/> ). Following the usual notation for discrete-time finite-horizon MDPs, the order of activity for the MDP at each time step <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/837ba99e543f5d832b37360170b84451.svg?invert_in_darkmode" align=middle width=128.32715775pt height=22.465723500000017pt/> is as follows:
 
-- Observe State $\left(S_t, W_t, I_t\right) \in \mathcal{S}_t$.
+- Observe State <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/de8dd03eab584ec4f08992fa7383a359.svg?invert_in_darkmode" align=middle width=112.60263299999998pt height=24.65753399999998pt/>.
 
-- Perform Action $\left(P_t^{(b)}, N_t^{(b)}, P_t^{(a)}, N_t^{(a)}\right) \in \mathcal{A}_t$.
-- Random number of bid shares hit at time step $t$ (this is equal to $X_{t+1}^{(b)}-X_t^{(b)}$ ).
-- Random number of ask shares lifted at time step $t$ (this is equal to $X_{t+1}^{(a)}-X_t^{(a)}$ ),
-- Update of $W_t$ to $W_{t+1}$.
-- Update of $I_t$ to $I_{t+1}$.
-- Stochastic evolution of $S_t$ to $S_{t+1}$.
-- Receive Reward $R_{t+1}$, where
+- Perform Action <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/62e0653cf284dd497b411d4545186b0d.svg?invert_in_darkmode" align=middle width=205.61445464999997pt height=37.80850590000001pt/>.
+- Random number of bid shares hit at time step <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> (this is equal to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/77f269fca85fc20c8aa6e9e5a7093a37.svg?invert_in_darkmode" align=middle width=87.10507739999998pt height=34.337843099999986pt/> ).
+- Random number of ask shares lifted at time step <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> (this is equal to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/d604abc77411e9067179f6d8920dc9b4.svg?invert_in_darkmode" align=middle width=88.45462229999998pt height=34.337843099999986pt/> ),
+- Update of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/bd049554fbc115df2fe2a43a4e203ffd.svg?invert_in_darkmode" align=middle width=20.49092594999999pt height=22.465723500000017pt/> to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/425f7588d4d9d95def98ea659badabc8.svg?invert_in_darkmode" align=middle width=37.13484554999999pt height=22.465723500000017pt/>.
+- Update of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/> to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1fa090c919706a5742f79edaca8bdb26.svg?invert_in_darkmode" align=middle width=28.83576299999999pt height=22.465723500000017pt/>.
+- Stochastic evolution of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/> to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/cf83185198a68ea312b2d4387b1af3fe.svg?invert_in_darkmode" align=middle width=31.68963764999999pt height=22.465723500000017pt/>.
+- Receive Reward <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/464207bf81effbe38d5a981f0168b2d2.svg?invert_in_darkmode" align=middle width=34.09118789999999pt height=22.465723500000017pt/>, where
 
-$$
-R_{t+1}:= \begin{cases}0 & \text { for } 1 \leq t+1 \leq T-1 \\ U\left(W_T+I_T \cdot S_T\right) & \text { for } t+1=T\end{cases}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ea30424bec3cd9c19b6b259b0b5284a0.svg?invert_in_darkmode" align=middle width=372.6193977pt height=49.315569599999996pt/></p>
 
-The goal is to find an Optimal Policy $\pi^* =\left(\pi_0^*, \pi_1^*, \ldots, \pi_{T-1}^*\right)$, where
+The goal is to find an Optimal Policy <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/0179d75528829d31ffcfd241d80ed66d.svg?invert_in_darkmode" align=middle width=169.925481pt height=27.94539330000001pt/>, where
 
-$$
-\pi_t^*\left(\left(S_t, W_t, I_t\right)\right)=\left(P_t^{(b)}, N_t^{(b)}, P_t^{(a)}, N_t^{(a)}\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1bf06e12fb5bf2827488143391d9fd7b.svg?invert_in_darkmode" align=middle width=299.98323795pt height=29.58934275pt/></p>
 
 that maximizes:
 
-$$
-\mathbb{E}\left[\sum^T R_t\right]=\mathbb{E}\left[R_T\right]=\mathbb{E}\left[U\left(W_T+I_T \cdot S_T\right)\right]
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9c6183e960c1cc487f63555dd80f395c.svg?invert_in_darkmode" align=middle width=314.36637705pt height=49.315569599999996pt/></p>
 
 A landmark paper by Avellaneda and Stoikov (Avellaneda and Stoikov 2008) formulated this optimal market-making problem in its continuous-time version. Their formulation is conducive to analytical tractability and they came up with a simple, clean and intuitive solution. In this subsection, we go over their formulation and in the next subsection, we show the derivation of their solution. We adapt our discrete-time notation above to their continuous-time setting.
-$\left[\left(X_t^{(b)} \mid 0 \leq t<T\right]\right.$ and $\left[X_t^{(a)} \mid 0 \leq t<T\right]$ are assumed to be continuous-time Poisson processes with the hit rate per unit of time and the lift rate per unit of time denoted as $\lambda_t^{(b)}$ and $\lambda_t^{(a)}$, respectively. Hence, we can write the following:
+<img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/d071ec907d9cecbcee2aef9ceef5a06d.svg?invert_in_darkmode" align=middle width=140.70624314999998pt height=37.80850590000001pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/98884a434f639e436577d02afc18e9fb.svg?invert_in_darkmode" align=middle width=132.23844315pt height=37.80850590000001pt/> are assumed to be continuous-time Poisson processes with the hit rate per unit of time and the lift rate per unit of time denoted as <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7424004276b341d0647685448a76b0ac.svg?invert_in_darkmode" align=middle width=25.64395184999999pt height=34.337843099999986pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/30f04978746cac551dc156d944e1f7ca.svg?invert_in_darkmode" align=middle width=26.993498399999993pt height=34.337843099999986pt/>, respectively. Hence, we can write the following:
 
-$$d X_t^{(b)} \sim {Poisson}\left(\lambda_t^{(b)} \cdot d t\right) $$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/52feb224436747b5fb8f276e57a70a26.svg?invert_in_darkmode" align=middle width=197.1772341pt height=29.58934275pt/></p>
 
-$$ d X_t^{(a)} \sim {Poisson}\left(\lambda_t^{(a)} \cdot d t\right) $$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/f59af8bcbe3b72fe34475a48b91f2e6c.svg?invert_in_darkmode" align=middle width=199.87635855pt height=29.58934275pt/></p>
 
-$$ \lambda_t^{(b)}=f^{(b)}\left(\delta_t^{(b)}\right) $$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/eb9ca2d6c89776084100aeb886fd753c.svg?invert_in_darkmode" align=middle width=122.25687209999998pt height=29.58934275pt/></p>
 
-$$ \lambda_t^{(a)}=f^{(a)}\left(\delta_t^{(a)}\right) $$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/b2af0b0330bd34f1b6d42ceca7156eeb.svg?invert_in_darkmode" align=middle width=126.30555959999998pt height=29.58934275pt/></p>
 
-for decreasing functions $f^{(b)}(\cdot)$ and $f^{(a)}(\cdot)$.
+for decreasing functions <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9febc64e1c77da6c2b868a7faaa2564a.svg?invert_in_darkmode" align=middle width=44.045825999999984pt height=29.190975000000005pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/519ec1d87f05578fb4792519d64db23f.svg?invert_in_darkmode" align=middle width=45.39538904999999pt height=29.190975000000005pt/>.
 
-$$ d W_t=P_t^{(a)} \cdot d X_t^{(a)}-P_t^{(b)} \cdot d X_t^{(b)} $$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/bddf76a9333984b281010fb389c02917.svg?invert_in_darkmode" align=middle width=237.60863609999998pt height=21.21447405pt/></p>
 
-$$I_t=X_t^{(b)}-X_t^{(a)}\left(\text { note: } I_0=0\right) $$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/67afe1d006cdb7252e8a9938c2fd5619.svg?invert_in_darkmode" align=middle width=228.60730694999998pt height=21.27851055pt/></p>
 
-Since infinitesimal Poisson random variables $d X_t^{(b)}$ (shares hit in time interval from $t$ to $t+d t$ ) and $d X_t^{(a)}$ (shares lifted in time interval from $t$ to $t+d t$ ) are Bernoulli random variables (shares hit/lifted within time interval of duration $d t$ will be 0 or 1 ), $N_t^{(b)}$ and $N_t^{(a)}$ (number of shares in the submitted LOs for the infinitesimal time interval from $t$ to $t+d t$ ) can be assumed to be 1 .
+Since infinitesimal Poisson random variables <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8fdfff9b6b866dc22524e73f04d59307.svg?invert_in_darkmode" align=middle width=39.51949979999999pt height=34.337843099999986pt/> (shares hit in time interval from <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/0e240189b18d5f5bbc36ad1abdbe980c.svg?invert_in_darkmode" align=middle width=40.519350299999985pt height=22.831056599999986pt/> ) and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/b836db98a635ba6f721a2f18a84cbe91.svg?invert_in_darkmode" align=middle width=40.86904469999999pt height=34.337843099999986pt/> (shares lifted in time interval from <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/0e240189b18d5f5bbc36ad1abdbe980c.svg?invert_in_darkmode" align=middle width=40.519350299999985pt height=22.831056599999986pt/> ) are Bernoulli random variables (shares hit/lifted within time interval of duration <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/b754f1aa36ab39fd7b6949c690abdb6e.svg?invert_in_darkmode" align=middle width=14.492060549999989pt height=22.831056599999986pt/> will be 0 or 1 ), <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/bfed8cad36c20ada32fb2e5c8feea849.svg?invert_in_darkmode" align=middle width=31.05483809999999pt height=34.337843099999986pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/3dd3433cbc2537d02f55e28829e241e9.svg?invert_in_darkmode" align=middle width=32.40438299999999pt height=34.337843099999986pt/> (number of shares in the submitted LOs for the infinitesimal time interval from <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/0e240189b18d5f5bbc36ad1abdbe980c.svg?invert_in_darkmode" align=middle width=40.519350299999985pt height=22.831056599999986pt/> ) can be assumed to be 1 .
 
-This simplifies the Action at time $t$ to be just the pair:
+This simplifies the Action at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> to be just the pair:
 
-$$
-\left(\delta_t^{(b)}, \delta_t^{(a)}\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/50e8f91cd6e99b441b46077203cc1a9e.svg?invert_in_darkmode" align=middle width=77.89984785pt height=29.58934275pt/></p>
 
 OB Mid Price Dynamics is assumed to be scaled Brownian motion:
 
-$$
-d S_t=\sigma \cdot d z_t
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7278d7508663d02e7b7ce75fc90bf8f3.svg?invert_in_darkmode" align=middle width=89.3624787pt height=13.881256950000001pt/></p>
 
-for some $\sigma \in \mathbb{R}^{+}$.
-The Utility function is assumed to be: $U(x)=-e^{-\gamma x}$ where $\gamma>0$ is the risk-aversion parameter (this Utility function is essentially the CARA Utility function devoid of associated constants).
+for some <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/5f87590e110431e4946a036bdb6baaed.svg?invert_in_darkmode" align=middle width=52.03757294999998pt height=26.17730939999998pt/>.
+The Utility function is assumed to be: <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/a38f5a7dee65826636817d6738fa6726.svg?invert_in_darkmode" align=middle width=102.89470289999998pt height=26.17730939999998pt/> where <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/09ef023b00aa3c065ea605655db0e232.svg?invert_in_darkmode" align=middle width=39.56070194999999pt height=21.18721440000001pt/> is the risk-aversion parameter (this Utility function is essentially the CARA Utility function devoid of associated constants).
 
 
 The following solution is as presented in the Avellaneda-Stoikov paper. We can express the Avellaneda-Stoikov continuous-time formulation as a Hamilton-Jacobi-Bellman (HJB) formulation (note: for reference, the general HJB formulation is covered in Appendix D).
 
-We denote the Optimal Value function as $V^*\left(t, S_t, W_t, I_t\right)$. Note that unlike Section 5.13 in Chapter 5 where we denoted the Optimal Value Function as a time-indexed sequence $V_t^*(\cdot)$, here we make $t$ an explicit functional argument of $V^*$ and each of $S_t, W_t, I_t$ also as separate functional arguments of $V^*$ (instead of the typical approach of making the state, as a tuple, a single functional argument). This is because in the continuous-time setting, we are interested in the time-differential of the Optimal Value Function and we also want to represent the dependency of the Optimal Value Function on each of $S_t, W_t, I_t$ as explicit separate dependencies. Appendix D provides the derivation of the general HJB formulation (Equation (D.1) in Appendix D)—this general HJB Equation specializes here to the following:
+We denote the Optimal Value function as <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/409ec9f39b7754e084acebd16b548faf.svg?invert_in_darkmode" align=middle width=114.37212765pt height=24.65753399999998pt/>. Note that unlike Section 5.13 in Chapter 5 where we denoted the Optimal Value Function as a time-indexed sequence <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/b61f35a5623e56972138050400c9baa3.svg?invert_in_darkmode" align=middle width=38.15077694999999pt height=24.65753399999998pt/>, here we make <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> an explicit functional argument of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e83bcb9beee1facafa3d5758addf60f1.svg?invert_in_darkmode" align=middle width=19.97722484999999pt height=22.63846199999998pt/> and each of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/dff0253defccabdfc7c1248485f8e12d.svg?invert_in_darkmode" align=middle width=63.98404319999998pt height=22.465723500000017pt/> also as separate functional arguments of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e83bcb9beee1facafa3d5758addf60f1.svg?invert_in_darkmode" align=middle width=19.97722484999999pt height=22.63846199999998pt/> (instead of the typical approach of making the state, as a tuple, a single functional argument). This is because in the continuous-time setting, we are interested in the time-differential of the Optimal Value Function and we also want to represent the dependency of the Optimal Value Function on each of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/dff0253defccabdfc7c1248485f8e12d.svg?invert_in_darkmode" align=middle width=63.98404319999998pt height=22.465723500000017pt/> as explicit separate dependencies. Appendix D provides the derivation of the general HJB formulation (Equation (D.1) in Appendix D)—this general HJB Equation specializes here to the following:
 
-$$ 
-\max _{\delta_t^{(b)}, \delta_t^{(a)}} \mathbb{E}\left[d V^*\left(t, S_t, W_t, I_t\right)\right]=0 \text { for } t<T
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/a2b409375a22c9376371ee2a96618128.svg?invert_in_darkmode" align=middle width=296.7291492pt height=30.5785887pt/></p>
 
-$$V^*\left(T, S_T, W_T, I_T\right)=-e^{-\gamma \cdot\left(W_T+I_T \cdot S_T\right)}$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8eee88553ee2eaad6031099c51d2e5da.svg?invert_in_darkmode" align=middle width=275.0635767pt height=19.526994300000002pt/></p>
 
 
-An infinitesimal change $d V^*$ to $V^*\left(t, S_t, W_t, I_t\right)$ is comprised of 3 components:
-- Due to pure movement in time (dependence of $V^*$ on $t$ ).
-- Due to randomness in OB Mid-Price (dependence of $V^*$ on $S_t$ ).
-- Due to randomness in hitting/lifting the market-maker's Bid/Ask (dependence of $V^*$ on $\lambda_t^{(b)}$ and $\lambda_t^{(a)}$ ). Note that the probability of being hit in interval from $t$ to $t+$ $d t$ is $\lambda_t^{(b)} \cdot d t$ and probability of being lifted in interval from $t$ to $t+d t$ is $\lambda_t^{(a)} \cdot d t$, upon which the trading account value $W_t$ changes appropriately and the inventory $I_t$ increments/decrements by 1.
-With this, we can expand $d V^*\left(t, S_t, W_t, I_t\right)$ and rewrite HJB as:
+An infinitesimal change <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/a7d37ba49a0d6bd5772d113d7bb752a7.svg?invert_in_darkmode" align=middle width=28.533189299999986pt height=22.831056599999986pt/> to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/409ec9f39b7754e084acebd16b548faf.svg?invert_in_darkmode" align=middle width=114.37212765pt height=24.65753399999998pt/> is comprised of 3 components:
+- Due to pure movement in time (dependence of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e83bcb9beee1facafa3d5758addf60f1.svg?invert_in_darkmode" align=middle width=19.97722484999999pt height=22.63846199999998pt/> on <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> ).
+- Due to randomness in OB Mid-Price (dependence of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e83bcb9beee1facafa3d5758addf60f1.svg?invert_in_darkmode" align=middle width=19.97722484999999pt height=22.63846199999998pt/> on <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/> ).
+- Due to randomness in hitting/lifting the market-maker's Bid/Ask (dependence of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e83bcb9beee1facafa3d5758addf60f1.svg?invert_in_darkmode" align=middle width=19.97722484999999pt height=22.63846199999998pt/> on <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7424004276b341d0647685448a76b0ac.svg?invert_in_darkmode" align=middle width=25.64395184999999pt height=34.337843099999986pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/30f04978746cac551dc156d944e1f7ca.svg?invert_in_darkmode" align=middle width=26.993498399999993pt height=34.337843099999986pt/> ). Note that the probability of being hit in interval from <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/f469e3a0bd121777ffd517142a9e6bb3.svg?invert_in_darkmode" align=middle width=18.72153029999999pt height=20.221802699999984pt/> <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/b754f1aa36ab39fd7b6949c690abdb6e.svg?invert_in_darkmode" align=middle width=14.492060549999989pt height=22.831056599999986pt/> is <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b45369d678992f14ba6fea3988ce205.svg?invert_in_darkmode" align=middle width=52.829881499999985pt height=34.337843099999986pt/> and probability of being lifted in interval from <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/0e240189b18d5f5bbc36ad1abdbe980c.svg?invert_in_darkmode" align=middle width=40.519350299999985pt height=22.831056599999986pt/> is <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/06330cd8dbcedcbed59ac65592003f24.svg?invert_in_darkmode" align=middle width=54.179444549999985pt height=34.337843099999986pt/>, upon which the trading account value <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/bd049554fbc115df2fe2a43a4e203ffd.svg?invert_in_darkmode" align=middle width=20.49092594999999pt height=22.465723500000017pt/> changes appropriately and the inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/> increments/decrements by 1.
+With this, we can expand <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ca8f495b40ea73ba09fc3ed7ea80913f.svg?invert_in_darkmode" align=middle width=122.9280921pt height=24.65753399999998pt/> and rewrite HJB as:
 
-$$
-\max _{\delta_t^{(b)}, \delta_t^{(a)}}\{ \frac{\partial V^*}{\partial t} \cdot d t+\mathbb{E}\left[\sigma \cdot \frac{\partial V^*}{\partial S_t} \cdot d z_t+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2} \cdot\left(d z_t\right)^2\right]
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e67e8faed946851837641490a77295cf.svg?invert_in_darkmode" align=middle width=406.965537pt height=42.75136965pt/></p>
 
-$$+\lambda_t^{(b)} \cdot d t \cdot V^*\left(t, S_t, W_t-S_t+\delta_t^{(b)}, I_t+1\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/a83b45c22931d92b9c7aece049bfdea6.svg?invert_in_darkmode" align=middle width=307.8739653pt height=29.58934275pt/></p>
 
-$$+\lambda_t^{(a)} \cdot d t \cdot V^*\left(t, S_t, W_t+S_t+\delta_t^{(a)}, I_t-1\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2b70da5cca3730bc7a498fc2d0ea7636.svg?invert_in_darkmode" align=middle width=310.57308974999995pt height=29.58934275pt/></p>
 
-$$+\left(1-\lambda_t^{(b)} \cdot d t-\lambda_t^{(a)} \cdot d t\right) \cdot V^*\left(t, S_t, W_t, I_t\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/248aff95387ac656e066ebe9d2dff975.svg?invert_in_darkmode" align=middle width=316.8147444pt height=29.58934275pt/></p>
 
-$$\left.-V^*\left(t, S_t, W_t, I_t\right)\right\}=0$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/fb0ba805717af00a2681ee72f2026a60.svg?invert_in_darkmode" align=middle width=165.5135097pt height=16.438356pt/></p>
 
 
 
 Next, we want to convert the HJB Equation to a Partial Differential Equation (PDE). We can simplify the above HJB equation with a few observations:
-- $\mathbb{E}\left[d z_t\right]=0$.
-- $\mathbb{E}\left[\left(d z_t\right)^2\right]=d t$.
-- Organize the terms involving $\lambda_t^{(b)}$ and $\lambda_t^{(a)}$ better with some algebra.
-- Divide throughout by $d t$.
+- <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/3deeebe1a9461c48cfee29d76257e129.svg?invert_in_darkmode" align=middle width=74.95617029999998pt height=24.65753399999998pt/>.
+- <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2995b233196174cb94162915d5905367.svg?invert_in_darkmode" align=middle width=107.78159864999999pt height=37.80850590000001pt/>.
+- Organize the terms involving <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7424004276b341d0647685448a76b0ac.svg?invert_in_darkmode" align=middle width=25.64395184999999pt height=34.337843099999986pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/30f04978746cac551dc156d944e1f7ca.svg?invert_in_darkmode" align=middle width=26.993498399999993pt height=34.337843099999986pt/> better with some algebra.
+- Divide throughout by <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/b754f1aa36ab39fd7b6949c690abdb6e.svg?invert_in_darkmode" align=middle width=14.492060549999989pt height=22.831056599999986pt/>.
 
-$$\max _{\delta_t^{(b)}, \delta_t^{(a)}}\{ \frac{\partial V^*}{\partial t}+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2}$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1a0b89b6883041dfe71a42f9a4570050.svg?invert_in_darkmode" align=middle width=183.36742214999998pt height=42.75136965pt/></p>
 
-$$+\lambda_t^{(b)} \cdot\left(V^*\left(t, S_t, W_t-S_t+\delta_t^{(b)}, I_t+1\right)-V^*\left(t, S_t, W_t, I_t\right)\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2dec7379c13195fcdf55c0c28781e62c.svg?invert_in_darkmode" align=middle width=435.6077813999999pt height=29.58934275pt/></p>
 
-$$\left.+\lambda_t^{(a)} \cdot\left(V^*\left(t, S_t, W_t+S_t+\delta_t^{(a)}, I_t-1\right)-V^*\left(t, S_t, W_t, I_t\right)\right)\right\}=0$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/35f0fb0ae30e3342f86e9d1413e9efc9.svg?invert_in_darkmode" align=middle width=479.40261269999996pt height=29.58934275pt/></p>
 
-Next, note that $\lambda_t^{(b)}=f^{(b)}\left(\delta_t^{(b)}\right)$ and $\lambda_t^{(a)}=f^{(a)}\left(\delta_t^{(a)}\right)$, and apply the max only on the relevant terms:
+Next, note that <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9c7c790a77e7b453539713c51b870415.svg?invert_in_darkmode" align=middle width=122.25687209999998pt height=37.80850590000001pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/f53b09b60d7c08af958cc86951c9360f.svg?invert_in_darkmode" align=middle width=126.30555959999998pt height=37.80850590000001pt/>, and apply the max only on the relevant terms:
 
-$$\frac{\partial V^*}{\partial t}+\frac{\sigma^2}{2} \cdot \frac{\partial^2 V^*}{\partial S_t^2}$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8733d5df29c0e1a7c3ac404e50d90841.svg?invert_in_darkmode" align=middle width=125.46435pt height=39.822985949999996pt/></p>
 
-$$+\max _{\delta_t^{(b)}}\left\{f^{(b)}\left(\delta_t^{(b)}\right) \cdot\left(V^*\left(t, S_t, W_t-S_t+\delta_t^{(b)}, I_t+1\right)-V^*\left(t, S_t, W_t, I_t\right)\right)\right\}$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1ade7d1b2895d8abef3f67ca88e381b6.svg?invert_in_darkmode" align=middle width=541.0061612999999pt height=37.15407465pt/></p>
 
-$$+\max _{\delta_t^{(a)}}\left\{f^{(a)}\left(\delta_t^{(a)}\right) \cdot\left(V^*\left(t, S_t, W_t+S_t+\delta_t^{(a)}, I_t-1\right)-V^*\\left(t, S_t, W_t, I_t\right)\right)\}=0$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/3bed8fad62f153c2fd4a67cdf151ce93.svg?invert_in_darkmode" align=middle width=601.7729123999999pt height=37.15407465pt/></p>
 
 
 This combines with the boundary condition:
 
-$$
-V^*\left(T, S_T, W_T, I_T\right)=-e^{-\gamma \cdot\left(W_T+I_T \cdot S_T\right)}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/642b2596bb1a3bc7aa5f2b8062142b42.svg?invert_in_darkmode" align=middle width=275.0635767pt height=19.526994300000002pt/></p>
 
-Next, we make an educated guess for the functional form of $V^*\left(t, S_t, W_t, I_t\right)$ :
+Next, we make an educated guess for the functional form of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/409ec9f39b7754e084acebd16b548faf.svg?invert_in_darkmode" align=middle width=114.37212765pt height=24.65753399999998pt/> :
 
-$$
-V^*\left(t, S_t, W_t, I_t\right)=-e^{-\gamma \cdot\left(W_t+\theta\left(t, S_t, I_t\right)\right)}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/0b3a9029b2d52a90daabfd8f41bc5615.svg?invert_in_darkmode" align=middle width=271.17411749999997pt height=19.526994300000002pt/></p>
 
-to reduce the problem to a Partial Differential Equation (PDE) in terms of $\theta\left(t, S_t, I_t\right)$. Substituting this guessed functional form into the above PDE for $V^*\left(t, S_t, W_t, I_t\right)$ gives:
+to reduce the problem to a Partial Differential Equation (PDE) in terms of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/72633963a304c38dcea7806385091e79.svg?invert_in_darkmode" align=middle width=73.12783169999999pt height=24.65753399999998pt/>. Substituting this guessed functional form into the above PDE for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/409ec9f39b7754e084acebd16b548faf.svg?invert_in_darkmode" align=middle width=114.37212765pt height=24.65753399999998pt/> gives:
 
-$$\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/92332af5dbca54811002e964aa465874.svg?invert_in_darkmode" align=middle width=233.4828309pt height=49.315569599999996pt/></p>
 
-$$+\max _{\delta_t^{(b)}}\left\{\frac{f^{(b)}\left(\delta_t^{(b)}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(b)}-S_t+\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)\right\}$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/bb8887ca2f57c13ec2ea59ce864f1858.svg?invert_in_darkmode" align=middle width=457.5738189pt height=61.479937199999995pt/></p>
 
-$$+\max _{\delta_t^{(a)}}\left\{\frac{f^{(a)}\left(\delta_t^{(a)}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(a)}+S_t+\theta\left(t, S_t, I_t-1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)\right\}=0$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/667d50dabc6a3659051e363bfa08d298.svg?invert_in_darkmode" align=middle width=491.56945035pt height=61.479937199999995pt/></p>
 
 
 The boundary condition is:
 
-$$
-\theta\left(T, S_T, I_T\right)=I_T \cdot S_T
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/02fde7c486c82299d55d1ac652aefb91.svg?invert_in_darkmode" align=middle width=158.2884567pt height=16.438356pt/></p>
 
-It turns out that $\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t\right)$ and $\theta\left(t, S_t, I_t\right)-\theta\left(t, S_t, I_t-1\right)$ are equal to financially meaningful quantities known as Indifference Bid and Ask Prices.
+It turns out that <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7fdf841962b6e0d2f774e20d538b9f27.svg?invert_in_darkmode" align=middle width=194.65719404999996pt height=24.65753399999998pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/f4455db21c4e64d3341c363958c64159.svg?invert_in_darkmode" align=middle width=194.65720724999997pt height=24.65753399999998pt/> are equal to financially meaningful quantities known as Indifference Bid and Ask Prices.
 
-Indifference Bid Price $Q^{(b)}\left(t, S_t, I_t\right)$ is defined as follows:
+Indifference Bid Price <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1f5ee4e0cccdc25bbe99e58d0e559704.svg?invert_in_darkmode" align=middle width=94.82648504999999pt height=29.190975000000005pt/> is defined as follows:
 
-$$
-V^*\left(t, S_t, W_t-Q^{(b)}\left(t, S_t, I_t\right), I_t+1\right)=V^*\left(t, S_t, W_t, I_t\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1fadea316fd43b38021e74b58c81d9bd.svg?invert_in_darkmode" align=middle width=403.47878174999994pt height=29.58934275pt/></p>
 
-$Q^{(b)}\left(t, S_t, I_t\right)$ is the price to buy a single share with a guarantee of immediate purchase that results in the Optimum Expected Utility staying unchanged.
+<img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1f5ee4e0cccdc25bbe99e58d0e559704.svg?invert_in_darkmode" align=middle width=94.82648504999999pt height=29.190975000000005pt/> is the price to buy a single share with a guarantee of immediate purchase that results in the Optimum Expected Utility staying unchanged.
 
-Likewise, Indifference Ask Price $Q^{(a)}\left(t, S_t, I_t\right)$ is defined as follows:
+Likewise, Indifference Ask Price <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/09f4eac71922710627468851482027dd.svg?invert_in_darkmode" align=middle width=96.17604644999999pt height=29.190975000000005pt/> is defined as follows:
 
-$$
-V^*\left(t, S_t, W_t+Q^{(a)}\left(t, S_t, I_t\right), I_t-1\right)=V^*\left(t, S_t, W_t, I_t\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/eddf7db1272ad8f34d570957968182d6.svg?invert_in_darkmode" align=middle width=404.82834479999997pt height=29.58934275pt/></p>
 
-$Q^{(a)}\left(t, S_t, I_t\right)$ is the price to sell a single share with a guarantee of immediate sale that results in the Optimum Expected Utility staying unchanged.
+<img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/09f4eac71922710627468851482027dd.svg?invert_in_darkmode" align=middle width=96.17604644999999pt height=29.190975000000005pt/> is the price to sell a single share with a guarantee of immediate sale that results in the Optimum Expected Utility staying unchanged.
 
-For convenience, we abbreviate $Q^{(b)}\left(t, S_t, I_t\right)$ as $Q_t^{(b)}$ and $Q^{(a)}\left(t, S_t, I_t\right)$ as $Q_t^{(a)}$. Next, we express $V^*\left(t, S_t, W_t-Q_t^{(b)}, I_t+1\right)=V^*\left(t, S_t, W_t, I_t\right)$ in terms of $\theta$ :
+For convenience, we abbreviate <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1f5ee4e0cccdc25bbe99e58d0e559704.svg?invert_in_darkmode" align=middle width=94.82648504999999pt height=29.190975000000005pt/> as <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/750e2bf41aa3490212842f06e71b410c.svg?invert_in_darkmode" align=middle width=29.05029434999999pt height=34.337843099999986pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/09f4eac71922710627468851482027dd.svg?invert_in_darkmode" align=middle width=96.17604644999999pt height=29.190975000000005pt/> as <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/45de5b9088920160dbf0621b10ca44ed.svg?invert_in_darkmode" align=middle width=30.399839249999992pt height=34.337843099999986pt/>. Next, we express <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ce9d9c0bf1455bb1b62053f6b8088e93.svg?invert_in_darkmode" align=middle width=335.784867pt height=37.80850590000001pt/> in terms of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27e556cf3caa0673ac49a8f0de3c73ca.svg?invert_in_darkmode" align=middle width=8.17352744999999pt height=22.831056599999986pt/> :
 
-$$-e^{-\gamma \cdot\left(W_t-Q_t^{(b)}+\theta\left(t, S_t, I_t+1\right)\right)}=-e^{-\gamma \cdot\left(W_t+\theta\left(t, S_t, I_t\right)\right)}$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/78c957c4994d9e613b5e2deaf1a08f71.svg?invert_in_darkmode" align=middle width=350.3838525pt height=23.85181095pt/></p>
 
-$$\Rightarrow Q_t^{(b)}=\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1b281bd937f5380390f4a40050f6dddf.svg?invert_in_darkmode" align=middle width=267.45150795pt height=21.27851055pt/></p>
 
 
-Likewise for $Q_t^{(a)}$, we get:
-$$
-Q_t^{(a)}=\theta\left(t, S_t, I_t\right)-\theta\left(t, S_t, I_t-1\right)
-$$
+Likewise for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/45de5b9088920160dbf0621b10ca44ed.svg?invert_in_darkmode" align=middle width=30.399839249999992pt height=34.337843099999986pt/>, we get:
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ccc7ee4fceea9faf5e8e12661cccbf3a.svg?invert_in_darkmode" align=middle width=247.79658089999998pt height=21.27851055pt/></p>
 
-Using Equations (10.14) and (10.15), bring $Q_t^{(b)}$ and $Q_t^{(a)}$ in the PDE for $\theta$ :
+Using Equations (10.14) and (10.15), bring <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/750e2bf41aa3490212842f06e71b410c.svg?invert_in_darkmode" align=middle width=29.05029434999999pt height=34.337843099999986pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/45de5b9088920160dbf0621b10ca44ed.svg?invert_in_darkmode" align=middle width=30.399839249999992pt height=34.337843099999986pt/> in the PDE for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27e556cf3caa0673ac49a8f0de3c73ca.svg?invert_in_darkmode" align=middle width=8.17352744999999pt height=22.831056599999986pt/> :
 
-$$\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)+\max _{\delta_t^{(b)}} g\left(\delta_t^{(b)}\right)+\max _{\delta_t^{(a)}} h\left(\delta_t^{(b)}\right)=0$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/46f640c1c128318667d22ead55f58116.svg?invert_in_darkmode" align=middle width=482.72865794999996pt height=49.315569599999996pt/></p>
 
-$$\text {where } g\left(\delta_t^{(b)}\right)=\frac{f^{(b)}\left(\delta_t^{(b)}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(b)}-S_t+Q_t^{(b)}\right)}\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7435dff2a9fffb95c470e7b77147a875.svg?invert_in_darkmode" align=middle width=393.97785734999997pt height=51.61682955pt/></p>
 
-$$\text {and } h\left(\delta_t^{(a)}\right)=\frac{f^{(a)}\left(\delta_t^{(a)}\right)}{\gamma} \cdot\left(1-e^{\left.-\gamma \cdot \delta_t^{(a)}+S_t-Q_t^{(a)}\right)}\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/c12546e9fd773c5755d1210cb1e95d7d.svg?invert_in_darkmode" align=middle width=379.81473915pt height=51.61682955pt/></p>
 
-To maximize $g\left(\delta_t^{(b)}\right)$, differentiate $g$ with respect to $\delta_t^{(b)}$ and set to 0 :
+To maximize <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7e3e1fa5da8a698d040031d3ffa0b304.svg?invert_in_darkmode" align=middle width=55.60959194999999pt height=37.80850590000001pt/>, differentiate <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/3cf4fbd05970446973fc3d9fa3fe3c41.svg?invert_in_darkmode" align=middle width=8.430376349999989pt height=14.15524440000002pt/> with respect to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/3e4235d76672a2f9edc1b883378cbf8e.svg?invert_in_darkmode" align=middle width=23.98294139999999pt height=34.337843099999986pt/> and set to 0 :
 
-$$e^{-\gamma \cdot\left(\delta_t^{(b) *}-S_t+Q_t^{(b)}\right)} \cdot\left(\gamma \cdot f^{(b)}\left(\delta_t^{(b)^*}\right)-\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)\right)+\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)=0$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/371a1d18cd66b620a2e19b97b067860a.svg?invert_in_darkmode" align=middle width=531.68710815pt height=49.315569599999996pt/></p>
 
-$$\Rightarrow \delta_t^{(b)^*}=S_t-P_t^{(b)^*}=S_t-Q_t^{(b)}+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \frac{f^{(b)}\left(\delta_t^{(b)^*}\right)}{\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)}\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/73e9c0e8fa46f120a4c98bb3597e833a.svg?invert_in_darkmode" align=middle width=474.87152625pt height=69.04177335pt/></p>
 
-To maximize $h\left(\delta_t^{(a)}\right)$, differentiate $h$ with respect to $\delta_t^{(a)}$ and set to 0 :
+To maximize <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/874ebdbb24d43c1fdb49ed49aec00381.svg?invert_in_darkmode" align=middle width=57.99991064999999pt height=37.80850590000001pt/>, differentiate <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2ad9d098b937e46f9f58968551adac57.svg?invert_in_darkmode" align=middle width=9.47111549999999pt height=22.831056599999986pt/> with respect to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/61ef7d7470e9b5615577c05503c7eb52.svg?invert_in_darkmode" align=middle width=25.332486299999992pt height=34.337843099999986pt/> and set to 0 :
 
-$$e^{-\gamma \cdot\left(\delta_t^{(a)^*}+S_t-Q_t^{(a)}\right)} \cdot\left(\gamma \cdot f^{(a)}\left(\delta_t^{(a)^*}\right)-\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)\right)+\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)=0$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e1aca43357fea90b991d4df1640b553f.svg?invert_in_darkmode" align=middle width=542.9257713pt height=49.315569599999996pt/></p>
 
-$$\Rightarrow \delta_t^{(a)^*}=P_t^{(a)^*}-S_t=Q_t^{(a)}-S_t+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \frac{f^{(a)}\left(\delta_t^{(a)^*}\right)}{\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)}\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/c793b97ff02e098a2bcbe79ec8d3e023.svg?invert_in_darkmode" align=middle width=481.42946115pt height=69.04177335pt/></p>
 
 
-Equations (10.16) and (10.17) are implicit equations for $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$, respectively. Now let us write the PDE in terms of the Optimal Bid and Ask Spreads:
+Equations (10.16) and (10.17) are implicit equations for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ba3a486b15f8d4dae1c4f9c2a8be9cd4.svg?invert_in_darkmode" align=middle width=30.03324389999999pt height=34.64745899999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e10c8d27c0253c701bdba658d7088ba7.svg?invert_in_darkmode" align=middle width=31.382790449999987pt height=34.64745899999999pt/>, respectively. Now let us write the PDE in terms of the Optimal Bid and Ask Spreads:
 
-$$\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/92332af5dbca54811002e964aa465874.svg?invert_in_darkmode" align=middle width=233.4828309pt height=49.315569599999996pt/></p>
 
-$$+\frac{f^{(b)}\left(\delta_t^{(b)^*}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(b) *}-S_t+\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/b95ca6b51f1e2e3952372b821f077044.svg?invert_in_darkmode" align=middle width=405.19948095pt height=51.61682955pt/></p>
 
-$$+\frac{f^{(a)}\left(\delta_t^{(a)^*}\right)}{\gamma} \cdot\left(1-e^{-\gamma \cdot\left(\delta_t^{(a)^*}+S_t+\theta\left(t, S_t, I_t-1\right)-\theta\left(t, S_t, I_t\right)\right)}\right)=0$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/29fe05d5b4b0628d8424d3db296dbda9.svg?invert_in_darkmode" align=middle width=440.01703349999997pt height=51.61682955pt/></p>
 
-with boundary condition: $\theta\left(T, S_T, I_T\right)=I_T \cdot S_T$
+with boundary condition: <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/0c0c2a7f7dfbc5dd7d47c64fee2d5f24.svg?invert_in_darkmode" align=middle width=158.28845669999998pt height=24.65753399999998pt/>
 How do we go about solving this? Here are the steps:
 
-- Firstly, we solve $\operatorname{PDE}$ (10.18) for $\theta$ in terms of $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$. In general, this would be a numerical PDE solution.
-- Using Equations (10.14) and (10.15), and using the above-obtained $\theta$ in terms of $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$, we get $Q_t^{(b)}$ and $Q_t^{(a)}$ in terms of $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$.
-- Then we substitute the above-obtained $Q_t^{(b)}$ and $Q_t^{(a)}$ (in terms of $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$ ) in Equations (10.16) and (10.17).
-- Finally, we solve the implicit equations for $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$ (in general, numerically).
+- Firstly, we solve <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f6fd4dad7f5e0a7448f674cea87b733.svg?invert_in_darkmode" align=middle width=34.93160054999999pt height=22.465723500000017pt/> (10.18) for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27e556cf3caa0673ac49a8f0de3c73ca.svg?invert_in_darkmode" align=middle width=8.17352744999999pt height=22.831056599999986pt/> in terms of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ba3a486b15f8d4dae1c4f9c2a8be9cd4.svg?invert_in_darkmode" align=middle width=30.03324389999999pt height=34.64745899999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e10c8d27c0253c701bdba658d7088ba7.svg?invert_in_darkmode" align=middle width=31.382790449999987pt height=34.64745899999999pt/>. In general, this would be a numerical PDE solution.
+- Using Equations (10.14) and (10.15), and using the above-obtained <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27e556cf3caa0673ac49a8f0de3c73ca.svg?invert_in_darkmode" align=middle width=8.17352744999999pt height=22.831056599999986pt/> in terms of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ba3a486b15f8d4dae1c4f9c2a8be9cd4.svg?invert_in_darkmode" align=middle width=30.03324389999999pt height=34.64745899999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e10c8d27c0253c701bdba658d7088ba7.svg?invert_in_darkmode" align=middle width=31.382790449999987pt height=34.64745899999999pt/>, we get <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/750e2bf41aa3490212842f06e71b410c.svg?invert_in_darkmode" align=middle width=29.05029434999999pt height=34.337843099999986pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/45de5b9088920160dbf0621b10ca44ed.svg?invert_in_darkmode" align=middle width=30.399839249999992pt height=34.337843099999986pt/> in terms of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ba3a486b15f8d4dae1c4f9c2a8be9cd4.svg?invert_in_darkmode" align=middle width=30.03324389999999pt height=34.64745899999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e10c8d27c0253c701bdba658d7088ba7.svg?invert_in_darkmode" align=middle width=31.382790449999987pt height=34.64745899999999pt/>.
+- Then we substitute the above-obtained <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/750e2bf41aa3490212842f06e71b410c.svg?invert_in_darkmode" align=middle width=29.05029434999999pt height=34.337843099999986pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/45de5b9088920160dbf0621b10ca44ed.svg?invert_in_darkmode" align=middle width=30.399839249999992pt height=34.337843099999986pt/> (in terms of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ba3a486b15f8d4dae1c4f9c2a8be9cd4.svg?invert_in_darkmode" align=middle width=30.03324389999999pt height=34.64745899999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e10c8d27c0253c701bdba658d7088ba7.svg?invert_in_darkmode" align=middle width=31.382790449999987pt height=34.64745899999999pt/> ) in Equations (10.16) and (10.17).
+- Finally, we solve the implicit equations for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ba3a486b15f8d4dae1c4f9c2a8be9cd4.svg?invert_in_darkmode" align=middle width=30.03324389999999pt height=34.64745899999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e10c8d27c0253c701bdba658d7088ba7.svg?invert_in_darkmode" align=middle width=31.382790449999987pt height=34.64745899999999pt/> (in general, numerically).
 
 This completes the (numerical) solution to the Avellaneda-Stoikov continuous-time formulation for the Optimal Market-Making problem. Having been through all the heavy equations above, let's now spend some time on building intuition.
 
-Define the Indifference Mid Price $Q_t^{(m)}=\frac{Q_t^{(b)}+Q_t^{(a)}}{2}$. To develop intuition for Indifference Prices, consider a simple case where the market-maker doesn't supply any bids or asks after time $t$. This means the trading account value $W_T$ at time $T$ must be the same as the trading account value at time $t$ and the inventory $I_T$ at time $T$ must be the same as the inventory $I_t$ at time $t$. This implies:
+Define the Indifference Mid Price <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/f1edb212f683d955fd9c844cd0581a6d.svg?invert_in_darkmode" align=middle width=121.46570535pt height=41.21192459999999pt/>. To develop intuition for Indifference Prices, consider a simple case where the market-maker doesn't supply any bids or asks after time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/>. This means the trading account value <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1384466f2e74be321f39cdf3b1a711a2.svg?invert_in_darkmode" align=middle width=25.058851949999987pt height=22.465723500000017pt/> at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2f118ee06d05f3c2d98361d9c30e38ce.svg?invert_in_darkmode" align=middle width=11.889314249999991pt height=22.465723500000017pt/> must be the same as the trading account value at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/> and the inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8a4ad912112a929f83b7d9501ea13bea.svg?invert_in_darkmode" align=middle width=16.759769399999993pt height=22.465723500000017pt/> at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2f118ee06d05f3c2d98361d9c30e38ce.svg?invert_in_darkmode" align=middle width=11.889314249999991pt height=22.465723500000017pt/> must be the same as the inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/> at time <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.936097749999991pt height=20.221802699999984pt/>. This implies:
 
-$$
-V^*\left(t, S_t, W_t, I_t\right)=\mathbb{E}\left[-e^{-\gamma \cdot\left(W_t+I_t \cdot S_T\right)}\right]
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8541088260aa698f8722549e7ad151cc.svg?invert_in_darkmode" align=middle width=279.09548535pt height=29.58934275pt/></p>
 
-The process $d S_t=\sigma \cdot d z_t$ implies that $S_T \sim \mathcal{N}\left(S_t, \sigma^2 \cdot(T-t)\right)$, and hence:
+The process <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ec8a913f8ffa104d361a2b5f16d99701.svg?invert_in_darkmode" align=middle width=89.36247869999998pt height=22.831056599999986pt/> implies that <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1ffccc1d8f76cae83172cf7e7d879607.svg?invert_in_darkmode" align=middle width=179.1760905pt height=27.94539330000001pt/>, and hence:
 
-$$
-V^*\left(t, S_t, W_t, I_t\right)=-e^{-\gamma \cdot\left(W_t+I_t \cdot S_t-\frac{\gamma \cdot I_t^2 \cdot \sigma^2 \cdot(T-t)}{2}\right)}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ae3bf85590ddaa29535671b6ee10e147.svg?invert_in_darkmode" align=middle width=343.17496785pt height=33.4957062pt/></p>
 
 Hence,
 
-$$
-V^*\left(t, S_t, W_t-Q_t^{(b)}, I_t+1\right)=-e^{-\gamma \cdot\left(W_t-Q_t^{(b)}+\left(I_t+1\right) \cdot S_t-\frac{\gamma \cdot\left(I_t+1\right)^2 \cdot \sigma^2 \cdot(T-t)}{2}\right)}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/0a634edefc7dc412401873499d152d80.svg?invert_in_darkmode" align=middle width=518.54365035pt height=40.07120534999999pt/></p>
 
 But from Equation (10.12), we know that:
 
-$$
-V^*\left(t, S_t, W_t, I_t\right)=V^*\left(t, S_t, W_t-Q_t^{(b)}, I_t+1\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/1bb8f768e13e5399ed2408daac7e9d70.svg?invert_in_darkmode" align=middle width=335.78490659999994pt height=29.58934275pt/></p>
 
 Therefore,
 
-$$
--e^{-\gamma \cdot\left(W_t+I_t \cdot S_t-\frac{\gamma \cdot I_t^2 \cdot \sigma^2 \cdot(T-t)}{2}\right)}=-e^{-\gamma \cdot\left(W_t-Q_t^{(b)}+\left(I_t+1\right) \cdot S_t-\frac{\gamma \cdot\left(I_t+1\right)^2 \cdot \sigma^2 \cdot(T-t)}{2}\right)}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/d016afcff27a010221797e012f0af9d4.svg?invert_in_darkmode" align=middle width=526.7555699999999pt height=30.7559901pt/></p>
 
 This implies:
 
-$$
-Q_t^{(b)}=S_t-\left(2 I_t+1\right) \cdot \frac{\gamma \cdot \sigma^2 \cdot(T-t)}{2}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/c48bd0cdd664c03150eee8f58c9491da.svg?invert_in_darkmode" align=middle width=265.14914415pt height=35.77743345pt/></p>
 
 Likewise, we can derive:
 
-$$
-Q_t^{(a)}=S_t-\left(2 I_t-1\right) \cdot \frac{\gamma \cdot \sigma^2 \cdot(T-t)}{2}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/cf0f38dc91cde6a9c7b5ed7ad31c46b8.svg?invert_in_darkmode" align=middle width=266.49870719999996pt height=35.77743345pt/></p>
 
 The formulas for the Indifference Mid Price and the Indifference Bid-Ask Price Spread are as follows:
 
-$$Q_t^{(m)}=S_t-I_t \cdot \gamma \cdot \sigma^2 \cdot(T-t)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/6f2de9517a56f6fc0e770145e973bdc0.svg?invert_in_darkmode" align=middle width=219.74556615pt height=21.27851055pt/></p>
 
-$$Q_t^{(a)}-Q_t^{(b)}=\gamma \cdot \sigma^2 \cdot(T-t)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/89da3bd46902496066035f1cf0a95778.svg?invert_in_darkmode" align=middle width=204.32994449999998pt height=21.27851055pt/></p>
 
-These results for the simple case of no-market-making-after-time-t serve as approximations for our problem of optimal market-making. Think of $Q_t^{(m)}$ as a pseudo mid price for the market-maker, an adjustment to the OB mid price $S_t$ that takes into account the magnitude and sign of $I_t$. If the market-maker is long inventory $\left(I_t>0\right)$, then $Q_t^{(m)}<S_t$, which makes intuitive sense since the market-maker is interested in reducing her risk of inventory buildup and so, would be be more inclined to sell than buy, leading her to show bid and ask prices whose average is lower than the OB mid price $S_t$. Likewise, if the marketmaker is short inventory $\left(I_t<0\right)$, then $Q_t^{(m)}>S_t$ indicating inclination to buy rather than sell.
+These results for the simple case of no-market-making-after-time-t serve as approximations for our problem of optimal market-making. Think of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27be0fd62fc0c350dc1f71d9cf1747a8.svg?invert_in_darkmode" align=middle width=34.93430654999999pt height=34.337843099999986pt/> as a pseudo mid price for the market-maker, an adjustment to the OB mid price <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/> that takes into account the magnitude and sign of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/>. If the market-maker is long inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/089e54cf7654290c3372f04cddcf97a0.svg?invert_in_darkmode" align=middle width=55.93600814999999pt height=24.65753399999998pt/>, then <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9174673fe22e5e79c078a13896e43e27.svg?invert_in_darkmode" align=middle width=72.71955899999999pt height=34.337843099999986pt/>, which makes intuitive sense since the market-maker is interested in reducing her risk of inventory buildup and so, would be be more inclined to sell than buy, leading her to show bid and ask prices whose average is lower than the OB mid price <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/>. Likewise, if the marketmaker is short inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/5920ed2a11520986e9444ea403e1a379.svg?invert_in_darkmode" align=middle width=55.93600814999999pt height=24.65753399999998pt/>, then <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/205e5b411ed54c9f5f065437f79141c2.svg?invert_in_darkmode" align=middle width=72.71955899999999pt height=34.337843099999986pt/> indicating inclination to buy rather than sell.
 
 Armed with this intuition, we come back to optimal market-making, observing from Equations (10.16) and (10.17):
 
-$$
-P_t^{(b)^*}<Q_t^{(b)}<Q_t^{(m)}<Q_t^{(a)}<P_t^{(a)^*}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4a98fcf3d595a6f2ea2172dab402604d.svg?invert_in_darkmode" align=middle width=257.3978748pt height=21.36928365pt/></p>
 
-Visualize this ascending sequence of prices $\left[P_t^{(b)^*}, Q_t^{(b)}, Q_t^{(m)}, Q_t^{(a)}, P_t^{(a)^*}\right]$ as jointly sliding up/down (relative to OB mid price $S_t$ ) as a function of the inventory $I_t^{\prime}$ 's magnitude and sign, and perceive $P_t^{(b)^*}, P_t^{(a)^*}$ in terms of their spreads to the pseudo mid price $Q_t^{(m)}$ :
+Visualize this ascending sequence of prices <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/c05b3605bf9750d8d90fe8896560d78f.svg?invert_in_darkmode" align=middle width=216.11984294999996pt height=37.80850590000001pt/> as jointly sliding up/down (relative to OB mid price <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/> ) as a function of the inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/984b2ae2b5a2bcbcd1acb639a5d080ce.svg?invert_in_darkmode" align=middle width=12.305927699999991pt height=24.7161288pt/> 's magnitude and sign, and perceive <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/d906eee821bdd196b7529bbe547cf2e6.svg?invert_in_darkmode" align=middle width=80.18309969999999pt height=34.64745899999999pt/> in terms of their spreads to the pseudo mid price <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27be0fd62fc0c350dc1f71d9cf1747a8.svg?invert_in_darkmode" align=middle width=34.93430654999999pt height=34.337843099999986pt/> :
 
-$$Q_t^{(b)}-P_t^{(m)^*}=\frac{Q_t^{(b)}+Q_t^{(a)}}{2}+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \frac{f^{(b)}\left(\delta_t^{(b)^*}\right)}{\frac{\partial f^{(b)}}{\partial \delta_t^{(b)}}\left(\delta_t^{(b)^*}\right)}\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7eb140bab5fb10922c85ac28db8cf36d.svg?invert_in_darkmode" align=middle width=439.4602806pt height=69.04177335pt/></p>
 
-$$P_t^{(a)^*}-Q_t^{(m)}=\frac{Q_t^{(b)}+Q_t^{(a)}}{2}+\frac{1}{\gamma} \cdot \log \left(1-\gamma \cdot \ \frac{f^{(a)}\left(\delta_t^{(a)^*}\right)}{\frac{\partial f^{(a)}}{\partial \delta_t^{(a)}}\left(\delta_t^{(a)^*}\right)}\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9a83044be2f694f34898d4eee474c7cb.svg?invert_in_darkmode" align=middle width=448.79853315pt height=69.04177335pt/></p>
 
 
 
-The PDE (10.18) we derived above for $\theta$ and the associated implicit Equations (10.16) and (10.17) for $\delta_t^{(b)^*}, \delta_t^{(a)^*}$ are messy. So we make some assumptions, simplify, and derive analytical approximations(as presented in the Avellaneda-Stoikov paper). We start by assuming a fairly standard functional form for $f^{(b)}$ and $f^{(a)}$ :
+The PDE (10.18) we derived above for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27e556cf3caa0673ac49a8f0de3c73ca.svg?invert_in_darkmode" align=middle width=8.17352744999999pt height=22.831056599999986pt/> and the associated implicit Equations (10.16) and (10.17) for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/627145931ee2715d819ffd7191f6f163.svg?invert_in_darkmode" align=middle width=70.3656987pt height=34.64745899999999pt/> are messy. So we make some assumptions, simplify, and derive analytical approximations(as presented in the Avellaneda-Stoikov paper). We start by assuming a fairly standard functional form for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/a5bed0a7bd6f522416e93356a6c833c7.svg?invert_in_darkmode" align=middle width=25.87228214999999pt height=29.190975000000005pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/0edb922cc39f4f0e9acd626e8b869ba3.svg?invert_in_darkmode" align=middle width=27.22182704999999pt height=29.190975000000005pt/> :
 
-$$
-f^{(b)}(\delta)=f^{(a)}(\delta)=c \cdot e^{-k \cdot \delta}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/b0bda2c7e46cd30596815e776d1f04b5.svg?invert_in_darkmode" align=middle width=194.47642169999997pt height=19.526994300000002pt/></p>
 
 
 This reduces Equations (10.16) and (10.17) to:
 
-$$\delta_t^{(b)^*}=S_t-Q_t^{(b)}+\frac{1}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/37ee42280f6a9010428f8884ae53465f.svg?invert_in_darkmode" align=middle width=250.04464485pt height=36.1865163pt/></p>
 
-$$\delta_t^{(a)^*}=Q_t^{(a)}-S_t+\frac{1}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/013aa5eb42c96a2ca5c7e93b2a51af7a.svg?invert_in_darkmode" align=middle width=252.74377095pt height=36.1865163pt/></p>
 
 
-which means $P_t^{(b)^*}$ and $P_t^{(a)^*}$ are equidistant from $Q_t^{(m)}$. Substituting these simplified $\delta_t^{(b)^*}, \delta_t^{(a)^*}$ in Equation (10.18) reduces the PDE to:
+which means <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/cd3ef39061253f1cf923e91e3985d110.svg?invert_in_darkmode" align=middle width=34.94194439999999pt height=34.64745899999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4cab3c512f47f2993f7a89099f6341b4.svg?invert_in_darkmode" align=middle width=36.29148929999999pt height=34.64745899999999pt/> are equidistant from <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27be0fd62fc0c350dc1f71d9cf1747a8.svg?invert_in_darkmode" align=middle width=34.93430654999999pt height=34.337843099999986pt/>. Substituting these simplified <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/627145931ee2715d819ffd7191f6f163.svg?invert_in_darkmode" align=middle width=70.3656987pt height=34.64745899999999pt/> in Equation (10.18) reduces the PDE to:
 
-$$
-\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)+\frac{c}{k+\gamma} \cdot\left(e^{-k \cdot \delta_t^{(b)^*}}+e^{-k \cdot \delta_t^{(a)^*}}\right)=0
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/84ca5a0be3303e7a1bce22bb00ac9bac.svg?invert_in_darkmode" align=middle width=495.2362569pt height=49.315569599999996pt/></p>
 
-$$
-\text { with boundary condition } \theta\left(T, S_T, I_T\right)=I_T \cdot S_T
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/fdfea26f0a6d29d0f2059925d410004f.svg?invert_in_darkmode" align=middle width=341.89621124999996pt height=16.438356pt/></p>
 
-Note that this PDE (10.21) involves $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$. However, Equations (10.19), (10.20), (10.14) and (10.15) enable expressing $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$ in terms of $\theta\left(t, S_t, I_t-1\right), \theta\left(t, S_t, I_t\right)$ and $\theta\left(t, S_t, I_t+1\right)$. This gives us a PDE just in terms of $\theta$. Solving that PDE for $\theta$ would give us not only $V^*\left(t, S_t, W_t, I_t\right)$ but also $\delta_t^{(b)^*}$ and $\delta_t^{(a)^*}$ (using Equations (10.19), (10.20), (10.14) and (10.15)). To solve the PDE, we need to make a couple of approximations.
+Note that this PDE (10.21) involves <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ba3a486b15f8d4dae1c4f9c2a8be9cd4.svg?invert_in_darkmode" align=middle width=30.03324389999999pt height=34.64745899999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e10c8d27c0253c701bdba658d7088ba7.svg?invert_in_darkmode" align=middle width=31.382790449999987pt height=34.64745899999999pt/>. However, Equations (10.19), (10.20), (10.14) and (10.15) enable expressing <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ba3a486b15f8d4dae1c4f9c2a8be9cd4.svg?invert_in_darkmode" align=middle width=30.03324389999999pt height=34.64745899999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e10c8d27c0253c701bdba658d7088ba7.svg?invert_in_darkmode" align=middle width=31.382790449999987pt height=34.64745899999999pt/> in terms of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ccb830f5d8a6cf95c99058d5153bb348.svg?invert_in_darkmode" align=middle width=184.61154524999998pt height=24.65753399999998pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/c5608406f5ada67b487ef0931c238a8d.svg?invert_in_darkmode" align=middle width=101.43823139999999pt height=24.65753399999998pt/>. This gives us a PDE just in terms of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27e556cf3caa0673ac49a8f0de3c73ca.svg?invert_in_darkmode" align=middle width=8.17352744999999pt height=22.831056599999986pt/>. Solving that PDE for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27e556cf3caa0673ac49a8f0de3c73ca.svg?invert_in_darkmode" align=middle width=8.17352744999999pt height=22.831056599999986pt/> would give us not only <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/409ec9f39b7754e084acebd16b548faf.svg?invert_in_darkmode" align=middle width=114.37212765pt height=24.65753399999998pt/> but also <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ba3a486b15f8d4dae1c4f9c2a8be9cd4.svg?invert_in_darkmode" align=middle width=30.03324389999999pt height=34.64745899999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e10c8d27c0253c701bdba658d7088ba7.svg?invert_in_darkmode" align=middle width=31.382790449999987pt height=34.64745899999999pt/> (using Equations (10.19), (10.20), (10.14) and (10.15)). To solve the PDE, we need to make a couple of approximations.
 
-First, we make a linear approximation for $e^{-k \cdot \delta_t^{(b)^*}}$ and $e^{-k \cdot \delta_t^{(a)^*}}$ in PDE (10.21) as follows:
+First, we make a linear approximation for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/d26652dff19e87cc1d4a4dc164a47c85.svg?invert_in_darkmode" align=middle width=55.65051359999998pt height=38.24931989999999pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ff2fde1c9fe7c68c8675004a2791a450.svg?invert_in_darkmode" align=middle width=56.81017649999999pt height=38.24931989999999pt/> in PDE (10.21) as follows:
 
-$$
-\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot\left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)+\frac{c}{k+\gamma} \cdot\left(1-k \cdot \delta_t^{(b)^*}+1-k \cdot \delta_t^{(a)^*}\right)=0
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/be4cc8d1e367d53bcaf63b3ea45344ec.svg?invert_in_darkmode" align=middle width=541.06339155pt height=49.315569599999996pt/></p>
 
 Combining the Equations (10.19), (10.20), (10.14) and (10.15) gives us:
 
-$$
-\delta_t^{(b)^*}+\delta_t^{(a)^*}=\frac{2}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)+2 \theta\left(t, S_t, I_t\right)-\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t-1\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e1140e71a52213b2547b098ad307c0e8.svg?invert_in_darkmode" align=middle width=561.737187pt height=36.1865163pt/></p>
 
-With this expression for $\delta_t^{(b)^*}+\delta_t^{(a)^*}, \operatorname{PDE}(10.22)$ takes the form:
+With this expression for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/ab6a266d0acffa18466f8e9ee3a61c3a.svg?invert_in_darkmode" align=middle width=177.2607672pt height=34.64745899999999pt/> takes the form:
 
-$$
-\begin{aligned}
-\frac{\partial \theta}{\partial t}+\frac{\sigma^2}{2} \cdot & \left(\frac{\partial^2 \theta}{\partial S_t^2}-\gamma \cdot\left(\frac{\partial \theta}{\partial S_t}\right)^2\right)+\frac{c}{k+\gamma} \cdot\left(2-\frac{2 k}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)\right. \\
-& \left.-k \cdot\left(2 \theta\left(t, S_t, I_t\right)-\theta\left(t, S_t, I_t+1\right)-\theta\left(t, S_t, I_t-1\right)\right)\right)=0
-\end{aligned}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/a21bc5621cc59ec5e97ef00de571c3ed.svg?invert_in_darkmode" align=middle width=477.91215945pt height=73.80865469999999pt/></p>
 
-To solve PDE (10.23), we consider the following asymptotic expansion of $\theta$ in $I_t$ :
+To solve PDE (10.23), we consider the following asymptotic expansion of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27e556cf3caa0673ac49a8f0de3c73ca.svg?invert_in_darkmode" align=middle width=8.17352744999999pt height=22.831056599999986pt/> in <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/> :
 
-$$
-\theta\left(t, S_t, I_t\right)=\sum_{n=0}^{\infty} \frac{I_t^n}{n!} \cdot \theta^{(n)}\left(t, S_t\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/0a907aa67a308a012861d7d23c10671a.svg?invert_in_darkmode" align=middle width=227.86624904999996pt height=44.69878215pt/></p>
 
-So we need to determine the functions $\theta^{(n)}\left(t, S_t\right)$ for all $n=0,1,2, \ldots$
+So we need to determine the functions <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/cd38ca3f91ecd54722979156826c9610.svg?invert_in_darkmode" align=middle width=72.03017084999998pt height=29.190975000000005pt/> for all <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/422cabacaa3b13557d57a8d0c142fd34.svg?invert_in_darkmode" align=middle width=97.53777494999999pt height=21.18721440000001pt/>
 For tractability, we approximate this expansion to the first 3 terms:
 
-$$
-\theta\left(t, S_t, I_t\right) \approx \theta^{(0)}\left(t, S_t\right)+I_t \cdot \theta^{(1)}\left(t, S_t\right)+\frac{I_t^2}{2} \cdot \theta^{(2)}\left(t, S_t\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/b6dc0f490f09c567172e11f095603e8f.svg?invert_in_darkmode" align=middle width=403.19110919999997pt height=35.77743345pt/></p>
 
-We note that the Optimal Value Function $V^*$ can depend on $S_t$ only through the current Value of the Inventory (i.e., through $I_t \cdot S_t$ ), i.e., it cannot depend on $S_t$ in any other way. This
-means $V^*\left(t, S_t, W_t, 0\right)=-e^{-\gamma\left(W_t+\theta^{(0)}\left(t, S_t\right)\right)}$ is independent of $S_t$. This means $\theta^{(0)}\left(t, S_t\right)$ is independent of $S_t$. So, we can write it as simply $\theta^{(0)}(t)$, meaning $\frac{\partial \theta^{(0)}}{\partial S_t}$ and $\frac{\partial^2 \theta^{(0)}}{\partial S_t^2}$ are equal to 0 . Therefore, we can write the approximate expansion for $\theta\left(t, S_t, I_t\right)$ as:
+We note that the Optimal Value Function <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/e83bcb9beee1facafa3d5758addf60f1.svg?invert_in_darkmode" align=middle width=19.97722484999999pt height=22.63846199999998pt/> can depend on <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/> only through the current Value of the Inventory (i.e., through <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2e015667cb4cf5ad3a35b5b7af51f55c.svg?invert_in_darkmode" align=middle width=39.931437149999994pt height=22.465723500000017pt/> ), i.e., it cannot depend on <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/> in any other way. This
+means <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/c91df55dae570d7f2a11780db59715dd.svg?invert_in_darkmode" align=middle width=265.1218548pt height=36.4740057pt/> is independent of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/>. This means <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/6d26d9a522207157445ae3f6b989d0a2.svg?invert_in_darkmode" align=middle width=70.45669289999998pt height=29.190975000000005pt/> is independent of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/>. So, we can write it as simply <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/aec76a350bd348d8ee69e8bb71eec95a.svg?invert_in_darkmode" align=middle width=44.543540249999985pt height=29.190975000000005pt/>, meaning <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/b20d73bfb475567de949236beb05b754.svg?invert_in_darkmode" align=middle width=29.662784249999998pt height=35.19487620000001pt/> and <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2e05f9a401abf9fecfb2b4376c4291e4.svg?invert_in_darkmode" align=middle width=36.0783984pt height=35.19487620000001pt/> are equal to 0 . Therefore, we can write the approximate expansion for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/72633963a304c38dcea7806385091e79.svg?invert_in_darkmode" align=middle width=73.12783169999999pt height=24.65753399999998pt/> as:
 
-$$
-\theta\left(t, S_t, I_t\right)=\theta^{(0)}(t)+I_t \cdot \theta^{(1)}\left(t, S_t\right)+\frac{I_t^2}{2} \cdot \theta^{(2)}\left(t, S_t\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/5a5fe939d8c33a5aa297365e0ad43d10.svg?invert_in_darkmode" align=middle width=377.2779978pt height=35.77743345pt/></p>
 
-Substituting this approximation Equation (10.24) for $\theta\left(t, S_t, I_t\right)$ in $\operatorname{PDE}$ (10.23), we get:
+Substituting this approximation Equation (10.24) for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/72633963a304c38dcea7806385091e79.svg?invert_in_darkmode" align=middle width=73.12783169999999pt height=24.65753399999998pt/> in <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4f6fd4dad7f5e0a7448f674cea87b733.svg?invert_in_darkmode" align=middle width=34.93160054999999pt height=22.465723500000017pt/> (10.23), we get:
 
-$$
-\begin{aligned}
-& \frac{\partial \theta^{(0)}}{\partial t}+I_t \cdot \frac{\partial \theta^{(1)}}{\partial t}+\frac{I_t^2}{2} \cdot \frac{\partial \theta^{(2)}}{\partial t}+\frac{\sigma^2}{2} \cdot\left(I_t \cdot \frac{\partial^2 \theta^{(1)}}{\partial S_t^2}+\frac{I_t^2}{2} \cdot \frac{\partial^2 \theta^{(2)}}{\partial S_t^2}\right) \\
-& -\frac{\gamma \sigma^2}{2} \cdot\left(I_t \cdot \frac{\partial \theta^{(1)}}{\partial S_t}+\frac{I_t^2}{2} \cdot \frac{\partial \theta^{(2)}}{\partial S_t}\right)^2+\frac{c}{k+\gamma} \cdot\left(2-\frac{2 k}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)+k \cdot \theta^{(2)}\right)=0
-\end{aligned}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/507aea9088a4326315c8162dc6cb7afb.svg?invert_in_darkmode" align=middle width=590.1981888pt height=92.59257975pt/></p>
 
 with boundary condition:
 
-$$
-\theta^{(0)}(T)+I_T \cdot \theta^{(1)}\left(T, S_T\right)+\frac{I_T^2}{2} \cdot \theta^{(2)}\left(T, S_T\right)=I_T \cdot S_T
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/dafd0fd542985c836c3ddc7538cc4dce.svg?invert_in_darkmode" align=middle width=384.64551674999996pt height=35.77743345pt/></p>
 
-Now we separately collect terms involving specific powers of $I_t$, each yielding a separate PDE:
-- Terms devoid of $I_t$ (i.e., $I_t^0$ )
-- Terms involving $I_t$ (i.e., $I_t^1$ )
-- Terms involving $I_t^2$
+Now we separately collect terms involving specific powers of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/>, each yielding a separate PDE:
+- Terms devoid of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/> (i.e., <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/37d449a782ba51351a462b169349427c.svg?invert_in_darkmode" align=middle width=15.06851279999999pt height=26.76175259999998pt/> )
+- Terms involving <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/> (i.e., <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/519f15bf9b538f928c8ade41906d295c.svg?invert_in_darkmode" align=middle width=15.06851279999999pt height=26.76175259999998pt/> )
+- Terms involving <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/178b848f91ec0efe82fc33dea8cd4115.svg?invert_in_darkmode" align=middle width=15.06851279999999pt height=26.76175259999998pt/>
 
-We start by collecting terms involving $I_t$ :
+We start by collecting terms involving <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/> :
 
-$$
-\frac{\partial \theta^{(1)}}{\partial t}+\frac{\sigma^2}{2} \cdot \frac{\partial^2 \theta^{(1)}}{\partial S_t^2}=0 \text { with boundary condition } \theta^{(1)}\left(T, S_T\right)=S_T
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/88dcdc34b06bd1148fb5984fe33a4771.svg?invert_in_darkmode" align=middle width=478.30259894999995pt height=41.037597149999996pt/></p>
 
 The solution to this PDE is:
 
-$$
-\theta^{(1)}\left(t, S_t\right)=S_t
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f7f3fce0787dd03d0e29b1e0bebad32.svg?invert_in_darkmode" align=middle width=107.4199995pt height=19.526994300000002pt/></p>
 
-Next, we collect terms involving $I_t^2$ :
+Next, we collect terms involving <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/178b848f91ec0efe82fc33dea8cd4115.svg?invert_in_darkmode" align=middle width=15.06851279999999pt height=26.76175259999998pt/> :
 
-$$
-\frac{\partial \theta^{(2)}}{\partial t}+\frac{\sigma^2}{2} \cdot \frac{\partial^2 \theta^{(2)}}{\partial S_t^2}-\gamma \cdot \sigma^2 \cdot\left(\frac{\partial \theta^{(1)}}{\partial S_t}\right)^2=0 \text { with boundary condition } \theta^{(2)}\left(T, S_T\right)=0
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4766f237a78d0556574f012b4558b2bf.svg?invert_in_darkmode" align=middle width=608.5076167499999pt height=44.684442pt/></p>
 
-Noting that $\theta^{(1)}\left(t, S_t\right)=S_t$, we solve this PDE as:
+Noting that <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/a6b0f37541ec221d36759c55dd3c419d.svg?invert_in_darkmode" align=middle width=107.41999949999997pt height=29.190975000000005pt/>, we solve this PDE as:
 
-$$
-\theta^{(2)}\left(t, S_t\right)=-\gamma \cdot \sigma^2 \cdot(T-t)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/48f83036b8565f54f0301ffc314e35c8.svg?invert_in_darkmode" align=middle width=206.38691534999998pt height=19.526994300000002pt/></p>
 
-Finally, we collect the terms devoid of $I_t$
+Finally, we collect the terms devoid of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/>
 
-$$
-\frac{\partial \theta^{(0)}}{\partial t}+\frac{c}{k+\gamma} \cdot\left(2-\frac{2 k}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)+k \cdot \theta^{(2)}\right)=0 \text { with boundary } \theta^{(0)}(T)=0
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/791fdd24df6b083fb4806e57d1e98ec0.svg?invert_in_darkmode" align=middle width=577.41555465pt height=41.33280524999999pt/></p>
 
-Noting that $\theta^{(2)}\left(t, S_t\right)=-\gamma \sigma^2 \cdot(T-t)$, we solve as:
+Noting that <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/41bbd2d55ccb38360c6b78f65d0bfcff.svg?invert_in_darkmode" align=middle width=194.51493434999998pt height=29.190975000000005pt/>, we solve as:
 
-$$
-\theta^{(0)}(t)=\frac{c}{k+\gamma} \cdot\left(\left(2-\frac{2 k}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)\right) \cdot(T-t)-\frac{k \gamma \sigma^2}{2} \cdot(T-t)^2\right)
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/db8dac43c48bd3ff74eb80cc77fee063.svg?invert_in_darkmode" align=middle width=508.3950860999999pt height=40.11819404999999pt/></p>
 
 
-This completes the PDE solution for $\theta\left(t, S_t, I_t\right)$ and hence, for $V^*\left(t, S_t, W_t, I_t\right)$. Lastly, we derive formulas for $Q_t^{(b)}, Q_t^{(a)}, Q_t^{(m)}, \delta_t^{(b)^*}, \delta_t^{(a)^*}$.
+This completes the PDE solution for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/72633963a304c38dcea7806385091e79.svg?invert_in_darkmode" align=middle width=73.12783169999999pt height=24.65753399999998pt/> and hence, for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/409ec9f39b7754e084acebd16b548faf.svg?invert_in_darkmode" align=middle width=114.37212765pt height=24.65753399999998pt/>. Lastly, we derive formulas for <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/2abeddc14bf82b13eef3466b16f51b58.svg?invert_in_darkmode" align=middle width=189.13348409999998pt height=34.64745899999999pt/>.
 
 Using Equations (10.14) and (10.15), we get:
 
-$$
-\begin{aligned}
-& Q_t^{(b)}=\theta^{(1)}\left(t, S_t\right)+\left(2 I_t+1\right) \cdot \theta^{(2)}\left(t, S_t\right)=S_t-\left(2 I_t+1\right) \cdot \frac{\gamma \cdot \sigma^2 \cdot(T-t)}{2} \\
-& Q_t^{(a)}=\theta^{(1)}\left(t, S_t\right)+\left(2 I_t-1\right) \cdot \theta^{(2)}\left(t, S_t\right)=S_t-\left(2 I_t-1\right) \cdot \frac{\gamma \cdot \sigma^2 \cdot(T-t)}{2}
-\end{aligned}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/90f9e8654ff38e9e5d625fcade99f342.svg?invert_in_darkmode" align=middle width=523.6215633pt height=78.13023075pt/></p>
 
 Using equations (10.19) and (10.20), we get:
 
-$$
-\begin{aligned}
-\delta_t^{(b)^*} & =\frac{\left(2 I_t+1\right) \cdot \gamma \cdot \sigma^2 \cdot(T-t)}{2}+\frac{1}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right) \\
-\delta_t^{(a)^*} & =\frac{\left(1-2 I_t\right) \cdot \gamma \cdot \sigma^2 \cdot(T-t)}{2}+\frac{1}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)
-\end{aligned}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/d3c97676469c37100e7d48e8141d4b0c.svg?invert_in_darkmode" align=middle width=364.93627004999996pt height=84.52292474999999pt/></p>
 
-Optimal Bid-Ask Spread $\delta_t^{(b)^*}+\delta_t^{(a)^*}=\gamma \cdot \sigma^2 \cdot(T-t)+\frac{2}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)$
+Optimal Bid-Ask Spread <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/60b6ce76187b3c7a4da9c636356e26b5.svg?invert_in_darkmode" align=middle width=330.37019234999997pt height=34.64745899999999pt/>
 
-Optimal Pseudo-Mid $Q_t^{(m)}=\frac{Q_t^{(b)}+Q_t^{(a)}}{2}=\frac{P_t^{(b)^*}+P_t^{(a)^*}}{2}=S_t-I_t \cdot \gamma \cdot \sigma^2 \cdot(T-t)$
+Optimal Pseudo-Mid <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/cf12d00cda4845987bac3b821563e038.svg?invert_in_darkmode" align=middle width=408.42653279999996pt height=43.16527709999998pt/>
 
 
-Now let's get back to developing intuition. Think of $Q_t^{(m)}$ as inventory-risk-adjusted midprice (adjustment to $S_t$ ). If the market-maker is long inventory $\left(I_t>0\right), Q_t^{(m)}<S_t$ indicating inclination to sell rather than buy, and if market-maker is short inventory, $Q_t^{(m)}>S_t$ indicating inclination to buy rather than sell. Think of the interval $\left[P_t^{(b)^*}, P_t^{(a)^*}\right]$ as being around the pseudo mid-price $Q_t^{(m)}$ (rather than thinking of it as being around the OB mid-price $\left.S_t\right)$. The interval $\left[P_t^{(b)^*}, P_t^{(a)^*}\right]$ moves up/down in tandem with $Q_t^{(m)}$ moving up/down (as a function of inventory $I_t$ ). Note from Equation (10.33) that the Optimal Bid-Ask Spread $P_t^{(a)^*}-P_t^{(b)^*}$ is independent of inventory $I_t$.
+Now let's get back to developing intuition. Think of <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27be0fd62fc0c350dc1f71d9cf1747a8.svg?invert_in_darkmode" align=middle width=34.93430654999999pt height=34.337843099999986pt/> as inventory-risk-adjusted midprice (adjustment to <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/9f8bba50b95de09625626ddafa0698eb.svg?invert_in_darkmode" align=middle width=15.04571639999999pt height=22.465723500000017pt/> ). If the market-maker is long inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/f5a845b1980245aa44107bbdefa37623.svg?invert_in_darkmode" align=middle width=138.70108889999997pt height=34.337843099999986pt/> indicating inclination to sell rather than buy, and if market-maker is short inventory, <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/205e5b411ed54c9f5f065437f79141c2.svg?invert_in_darkmode" align=middle width=72.71955899999999pt height=34.337843099999986pt/> indicating inclination to buy rather than sell. Think of the interval <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/18654bd3f24542c12cd5e87b0c36ad0c.svg?invert_in_darkmode" align=middle width=97.35205754999998pt height=37.80850590000001pt/> as being around the pseudo mid-price <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27be0fd62fc0c350dc1f71d9cf1747a8.svg?invert_in_darkmode" align=middle width=34.93430654999999pt height=34.337843099999986pt/> (rather than thinking of it as being around the OB mid-price <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/93e97ca71fa02b72d83e840fb06d4f6b.svg?invert_in_darkmode" align=middle width=22.260329849999994pt height=24.65753399999998pt/>. The interval <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/18654bd3f24542c12cd5e87b0c36ad0c.svg?invert_in_darkmode" align=middle width=97.35205754999998pt height=37.80850590000001pt/> moves up/down in tandem with <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/27be0fd62fc0c350dc1f71d9cf1747a8.svg?invert_in_darkmode" align=middle width=34.93430654999999pt height=34.337843099999986pt/> moving up/down (as a function of inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/> ). Note from Equation (10.33) that the Optimal Bid-Ask Spread <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7cecf159b7c753076225e9fbce5fab82.svg?invert_in_darkmode" align=middle width=92.96842499999998pt height=34.64745899999999pt/> is independent of inventory <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/8b96a609d1c1c81c5ff51536677febdf.svg?invert_in_darkmode" align=middle width=12.19184174999999pt height=22.465723500000017pt/>.
 
 A useful view is:
 
-$$
-P_t^{(b)^*}<Q_t^{(b)}<Q_t^{(m)}<Q_t^{(a)}<P_t^{(a)^*}
-$$
+<p align="center"><img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/4a98fcf3d595a6f2ea2172dab402604d.svg?invert_in_darkmode" align=middle width=257.3978748pt height=21.36928365pt/></p>
 
 with the spreads as follows:
 
-Outer Spreads $P_t^{(a)^*}-Q_t^{(a)}=Q_t^{(b)}-P_t^{(b)^*}=\frac{1}{\gamma} \cdot \log \left(1+\frac{\gamma}{k}\right)$
-Inner Spreads $Q_t^{(a)}-Q_t^{(m)}=Q_t^{(m)}-Q_t^{(b)}=\frac{\gamma \cdot \sigma^2 \cdot(T-t)}{2}$
+Outer Spreads <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/7331cdf5b2d6146890d46f5dc45dba1c.svg?invert_in_darkmode" align=middle width=321.9719480999999pt height=34.64745899999999pt/>
+Inner Spreads <img src="https://rawgit.com/aarushsheth/High-frequency-trading-in-a-limit-order-book/main/svgs/f3eb0451b21090aeabd058dfaa86ca79.svg?invert_in_darkmode" align=middle width=283.51106354999996pt height=36.460254599999985pt/>
 
 This completes the analytical approximation to the solution of the Avellaneda-Stoikov continuous-time formulation of the Optimal Market-Making problem.
 
