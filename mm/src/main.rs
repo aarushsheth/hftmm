@@ -9,15 +9,15 @@ use std::f64::consts::E;
 const S0: f64 = 100.0; // Initial stock price
 const T: f64 = 10.0;   // Terminal time
 const DT: f64 = 0.005; // Time step
-const GAMMA: f64 = 0.5; // Risk aversion parameter
+const GAMMA: f64 = 1.5; // Risk aversion parameter
 const SIGMA: f64 = 3.0; // Lower volatility of the mid-price for smoother prices
 const K: f64 = 0.1;    // Lower K to make trades more frequent
-const A: f64 = 280.0;  // Increased A to boost arrival rates
+const A: f64 = 170.0;  // Increased A to boost arrival rates
 const LAMBDA: f64 = 0.1; // Base intensity of market orders
 const MAX_INVENTORY: i32 = 1000; // Maximum allowable inventory
 
 
-const NUM_SIMULATIONS: usize = 1000; // Number of simulations to run
+const NUM_SIMULATIONS: usize = 10000; // Number of simulations to run
 const NUM_BINS: usize = 50; // Number of bins for the histogram
 
 // Agent struct
